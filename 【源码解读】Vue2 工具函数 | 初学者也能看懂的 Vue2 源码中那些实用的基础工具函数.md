@@ -388,3 +388,300 @@ var hyphenate = cached(function (str) {
 console.log(hyphenate('onClick')) // 'on-click'
 ```
 
+### `polyfillBind` bind 的 polyfill
+  
+```js
+function polyfillBind (fn, ctx) {
+  function boundFn (a) {
+    var l = arguments.length;
+    return l
+      ? l > 1
+        ? fn.apply(ctx, arguments)
+        : fn.call(ctx, a)
+      : fn.call(ctx)
+  }
+
+  boundFn._length = fn.length;
+  return boundFn
+}
+
+function nativeBind (fn, ctx) {
+  return fn.bind(ctx)
+}
+
+var bind = Function.prototype.bind
+  ? nativeBind
+  : polyfillBind;
+
+// 用例
+var a = 1
+function logA() {
+	console.log(this.a)
+}
+var obj = {a:2}
+bind(logA,obj)()
+// 2
+```
+
+如果 `Function.prototype` 上有 `bind` 方法，则使用方法；否则使用定义的 `polyfillBind`。
+
+`polyfillBind` 在实现上区分了 `call` 和 `apply`，`call` 用于在无参数或仅有单个参数时绑定 `this`，`apply` 用于绑定 this 和多个参数。
+
+### `toArray` 将类数组转为数组
+
+把类数组转换为数组，支持指定从哪个位置开始，默认从 0 开始。
+
+```js
+/**
+ * Convert an Array-like object to a real Array.
+ */
+function toArray (list, start) {
+  start = start || 0;
+  var i = list.length - start;
+  var ret = new Array(i);
+  while (i--) {
+    ret[i] = list[i + start];
+  }
+  return ret
+}
+
+// 例子：
+function fn(){
+  var arr1 = toArray(arguments);
+  console.log(arr1);
+  var arr2 = toArray(arguments, 2);
+  console.log(arr2);
+}
+
+fn(1,2,3,4,5);
+// [1, 2, 3, 4, 5]
+// [3, 4, 5]
+```
+
+### `extend` 对象合并
+
+```js
+/**
+ * Mix properties into target object.
+ */
+function extend (to, _from) {
+  for (var key in _from) {
+    to[key] = _from[key];
+  }
+  return to
+}
+
+// 例子：
+const data = { name: '哆啦A梦' };
+const data2 = extend(data, { desc: '蓝色机器猫', name: '是哆啦A梦' });
+console.log(data); // { name: '是哆啦A梦', desc: '蓝色机器猫' }
+console.log(data2); // { name: '是哆啦A梦', desc: '蓝色机器猫' }
+console.log(data === data2); // true
+```
+
+### `toObject` 转对象
+
+将对象数组合并到一个对象中。
+
+```js
+/**
+ * Merge an Array of Objects into a single Object.
+ */
+function toObject (arr) {
+  var res = {};
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i]) {
+      extend(res, arr[i]);
+    }
+  }
+  return res
+}
+
+var obj = {a:1,b:2}
+var obj2 = {a: 'hello', c: 3}
+const res =  toObject([obj, obj2])
+console.log(res)
+// {a: 'hello', b: 2, c: 3}
+```
+
+### `noop` 空函数
+
+常用来初始化赋值。
+
+```js
+/* eslint-disable no-unused-vars */
+/**
+ * Perform no operation.
+ * Stubbing args to make Flow happy without leaving useless transpiled code
+ * with ...rest (https://flow.org/blog/2017/05/07/Strict-Function-Call-Arity/).
+ */
+function noop (a, b, c) {}
+```
+
+### `no` 永远返回 false
+
+```js
+/**
+ * Always return false.
+ */
+var no = function (a, b, c) { return false; };
+/* eslint-enable no-unused-vars */
+```
+
+### `identity` 返回参数本身
+
+```js
+/**
+ * Return the same value.
+ */
+var identity = function (_) { return _; };
+```
+
+### `genStaticKeys` 生成静态属性
+
+```js
+/**
+ * Generate a string containing static keys from compiler modules.
+ */
+function genStaticKeys (modules) {
+  return modules.reduce(function (keys, m) {
+    return keys.concat(m.staticKeys || [])
+  }, []).join(',')
+}
+```
+
+### `looseEqual` 宽松相等
+
+因为对象、数组等都是引用类型，所以两个内容看起来是相等的值，实际上并不是严格相等的。
+
+```js
+var a = {};
+var b = {};
+a === b; // false
+a == b; // false
+```
+
+所以该函数是对数组、日期、对象进行递归比对。如果内容完全相等则宽松相等。
+
+```js
+/** 
+ * Check if two values are loosely equal - that is,
+ * if they are plain objects, do they have the same shape?
+ */
+function looseEqual (a, b) {
+  if (a === b) { return true }
+  var isObjectA = isObject(a);
+  var isObjectB = isObject(b);
+  if (isObjectA && isObjectB) {
+    try {
+      var isArrayA = Array.isArray(a);
+      var isArrayB = Array.isArray(b);
+      if (isArrayA && isArrayB) {
+        return a.length === b.length && a.every(function (e, i) {
+          return looseEqual(e, b[i])
+        })
+      } else if (!isArrayA && !isArrayB) {
+        var keysA = Object.keys(a);
+        var keysB = Object.keys(b);
+        return keysA.length === keysB.length && keysA.every(function (key) {
+          return looseEqual(a[key], b[key])
+        })
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+  } else if (!isObjectA && !isObjectB) {
+    return String(a) === String(b)
+  } else {
+    return false
+  }
+}
+```
+
+### `looseIndexOf` 宽松的 indexOf
+
+该函数实现的是宽松相等，原生的 `indexOf` 是严格相等的。
+
+```js
+/**
+ * Return the first index at which a loosely equal value can be
+ * found in the array (if value is a plain object, the array must
+ * contain an object of the same shape), or -1 if it is not present.
+ */
+function looseIndexOf (arr, val) {
+  for (var i = 0; i < arr.length; i++) {
+    if (looseEqual(arr[i], val)) { return i }
+  }
+  return -1
+}
+```
+
+### `once` 确保函数只执行一次
+
+利用闭包特性，存储状态
+
+```js
+/**
+ * Ensure a function is called only once.
+ */
+function once (fn) {
+  var called = false;
+  return function () {
+    if (!called) {
+      called = true;
+      fn.apply(this, arguments);
+    }
+  }
+}
+
+
+const fn1 = once(function(){
+  console.log('哎嘿，无论你怎么调用，我只执行一次');
+});
+
+fn1(); // '哎嘿，无论你怎么调用，我只执行一次'
+fn1(); // 我不输出
+fn1(); // 我还不输出
+fn1(); // 我就不输出
+```
+
+### 生命周期等
+
+最后是 Vue2 里内置的一些属性、资源类型、生命周期集合。
+
+```js
+var SSR_ATTR = 'data-server-rendered';
+
+var ASSET_TYPES = [
+  'component',
+  'directive',
+  'filter'
+];
+
+var LIFECYCLE_HOOKS = [
+  'beforeCreate',
+  'created',
+  'beforeMount',
+  'mounted',
+  'beforeUpdate',
+  'updated',
+  'beforeDestroy',
+  'destroyed',
+  'activated',
+  'deactivated',
+  'errorCaptured',
+  'serverPrefetch'
+];
+```
+
+[Vue 生命周期](https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90)
+
+## 总结
+
+工具函数不像核心逻辑一样需要理解他的思想，而是非常基础的JS函数，还是比较容易看懂的。比较麻烦的一点是不清楚这些函数的使用场景，还需要一点一点摸索。
+
+几个比较有意思的方法都包含了一些知识点的细节，比如缓存和once用到了闭包特性，了解了如何用call和apply实现一个bind方法等，这些都是很有意思的实现，又能加深对知识点的理解。
+
+每天进步一点，积跬步，至千里。
