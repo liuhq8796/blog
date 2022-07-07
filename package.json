@@ -1,0 +1,17 @@
+{
+  "name": "notebook",
+  "version": "1.0.0",
+  "description": "记录一下我的学习笔记",
+  "scripts": {
+    "new": "node new.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhq8796/notebook.git"
+  },
+  "author": "Lucas Liu",
+  "homepage": "https://github.com/liuhq8796/notebook#readme",
+  "dependencies": {
+    "file-save": "^0.2.0"
+  }
+}
