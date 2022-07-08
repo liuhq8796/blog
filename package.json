@@ -11,10 +11,8 @@
   },
   "author": "Lucas Liu",
   "homepage": "https://github.com/liuhq8796/notebook#readme",
-  "dependencies": {
-    "file-save": "^0.2.0"
-  },
   "devDependencies": {
+    "file-save": "^0.2.0",
     "prompts": "^2.4.2"
   }
 }
