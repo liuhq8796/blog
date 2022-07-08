@@ -1,70 +1,110 @@
-"use strict";
+#!/usr/bin/env node
 
-console.log();
-process.on("exit", () => {
-  console.log();
-});
-
-const regex = new RegExp('"[^"]+"|[\\S]+', "g");
-const args = [];
-const input = process.argv.slice(2).join(" ");
-input.match(regex).forEach((element) => {
-  if (!element) return;
-  return args.push(element.replace(/"/g, ""));
-});
-
-// 至少传入两个参数，若不够则报错，退出进程
-if (!args[1]) {
-  console.error(
-    "[笔记类型][笔记标题]必填 - Please enter new notebook type and title"
-  );
-  process.exit(1);
-}
+// console.log();
+// process.on("exit", () => {
+//   console.log();
+// });
 
 // 路径模块
 const path = require("path");
+// 交互模块
+const prompts = require("prompts");
 // 保存文件
 const fileSave = require("file-save");
-// 第一个参数 type 1: 源码共读
-const type = args[0];
-// 第二个参数 笔记标题
-const title = args[1];
-// 文件名
-const fileName = title + ".md";
-// 第三个参数 若 type === 1，则为源码共读期数
-const order = args[2] || "";
-// 第四个参数 若 type === 1，则为源码共读链接
-const url = args[3] || "";
-// 笔记路径
-const notePath = path.join(__dirname, "./notes");
 
-const file = {
-  fileName: fileName,
-  content: `# ${title}
+const questions = [
+  {
+    type: "select",
+    name: "type",
+    message: "选择一个类型",
+    choices: [
+      { title: "无", value: 0 },
+      { title: "源码共读", value: 1 },
+    ],
+    initial: 0,
+  },
+  {
+    type: "text",
+    name: "title",
+    message: "请输入笔记标题",
+  },
+  {
+    type: (prev, values, prompt) => {
+      if (values.type === 1) {
+        return "number";
+      }
+      return null;
+    },
+    name: "order",
+    message: "请输入【源码共读】期数",
+  },
+  {
+    type: (prev, values, prompt) => {
+      if (values.type === 1) {
+        return "text";
+      }
+      return null;
+    },
+    name: "url",
+    message: "请输入源码共读链接",
+  },
+];
+
+async function init() {
+  let result = {};
+
+  try {
+    result = await prompts(questions);
+
+    // 文件名
+    const fileName =
+      result.type === 1
+        ? "【源码共读】" + result.title + ".md"
+        : result.title + ".md";
+
+    // 笔记路径
+    const notePath = path.join(__dirname, "./notes");
+
+    let file = {};
+
+    if (result.type === 1) {
+      file = {
+        fileName: fileName,
+        content: `# 【源码共读】${result.title}
 
 ## 前言
 
 > 本文参加了由 [公众号@若川视野](https://lxchuan12.gitee.io/) 发起的每周源码共读活动，点击[了解详情](https://juejin.cn/post/7079706017579139102)一起参与。
-        
-> 这是源码共读的第${order}期，链接：${url}。`,
-};
 
-// 添加到 articles.json 文件中
-const articles = require("./articles.json");
-if (articles[title]) {
-  console.error("文件名已存在 - File name already exists");
-  process.exit(1);
+> 这是源码共读的第${result.order}期，链接：${result.url}。`,
+      };
+    }
+
+    // 添加到 articles.json 文件中
+    const articles = require("./articles.json");
+    if (articles[result.title]) {
+      console.error("文件名已存在 - File name already exists");
+      process.exit(1);
+    }
+    articles[result.title] = {
+      order: result.order,
+      url: result.url,
+    };
+    fileSave(path.join(__dirname, "articles.json"))
+      .write(JSON.stringify(articles, null, 2), "utf8")
+      .end("\n");
+
+    fileSave(path.join(notePath, file.fileName))
+      .write(file.content, "utf8")
+      .end("\n");
+
+    console.log("DONE!");
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
 }
-articles[title] = {
-  order,
-  url,
-};
-fileSave(path.join(__dirname, "articles.json"))
-  .write(JSON.stringify(articles, null, 2), "utf8")
-  .end("\n");
 
-fileSave(path.join(notePath, file.fileName))
-  .write(file.content, "utf8")
-  .end("\n");
-
-console.log("DONE!");
+init().catch((e) => {
+  console.error(e);
+});

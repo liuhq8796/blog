@@ -13,5 +13,8 @@
   "homepage": "https://github.com/liuhq8796/notebook#readme",
   "dependencies": {
     "file-save": "^0.2.0"
+  },
+  "devDependencies": {
+    "prompts": "^2.4.2"
   }
 }
