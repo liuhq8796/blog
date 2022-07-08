@@ -1,10 +1,5 @@
 #!/usr/bin/env node
 
-// console.log();
-// process.on("exit", () => {
-//   console.log();
-// });
-
 // 路径模块
 const path = require("path");
 // 交互模块
@@ -82,11 +77,14 @@ async function init() {
 
     // 添加到 articles.json 文件中
     const articles = require("./articles.json");
-    if (articles[result.title]) {
+    const key = result.type === 1
+    ? "【源码共读】" + result.title
+    : result.title;
+    if (articles[key]) {
       console.error("文件名已存在 - File name already exists");
       process.exit(1);
     }
-    articles[result.title] = {
+    articles[key] = {
       order: result.order,
       url: result.url,
     };
