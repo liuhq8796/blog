@@ -58,7 +58,7 @@ async function init() {
         : result.title + ".md";
 
     // 笔记路径
-    const notePath = path.join(__dirname, "./notes");
+    const notePath = path.join(__dirname, "../notes");
 
     let file = {};
 
@@ -76,7 +76,7 @@ async function init() {
     }
 
     // 添加到 articles.json 文件中
-    const articles = require("./articles.json");
+    const articles = require("../articles.json");
     const key = result.type === 1
     ? "【源码共读】" + result.title
     : result.title;
@@ -88,7 +88,7 @@ async function init() {
       order: result.order,
       url: result.url,
     };
-    fileSave(path.join(__dirname, "articles.json"))
+    fileSave(path.join(__dirname, "../articles.json"))
       .write(JSON.stringify(articles, null, 2), "utf8")
       .end("\n");
 

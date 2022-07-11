@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "记录一下我的学习笔记",
   "scripts": {
-    "new": "node new.js"
+    "new": "node scripts/new.js"
   },
   "repository": {
     "type": "git",
