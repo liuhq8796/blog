@@ -53,9 +53,9 @@ async function init() {
 
     // 文件名
     const fileName =
-      result.type === 1
+      (result.type === 1
         ? "【源码共读】" + result.title + ".md"
-        : result.title + ".md";
+        : result.title + ".md").replace(/\s+/g, "_");
 
     // 笔记路径
     const notePath = path.join(__dirname, "../notes");
