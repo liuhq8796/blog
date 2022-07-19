@@ -423,9 +423,9 @@ bind(logA,obj)()
 // 2
 ```
 
-如果 `Function.prototype` 上有 `bind` 方法，则使用方法；否则使用定义的 `polyfillBind`。
+兼容了老版本不支持原生的 `bind` 函数，如果 `Function.prototype` 上有 `bind` 方法，则使用方法；否则使用定义的 `polyfillBind`。
 
-`polyfillBind` 在实现上区分了 `call` 和 `apply`，`call` 用于在无参数或仅有单个参数时绑定 `this`，`apply` 用于绑定 this 和多个参数。
+`polyfillBind` 在实现上区分了 `call` 和 `apply`，据说是因为性能问题。`call` 用于在无参数或仅有单个参数时绑定 `this`，`apply` 用于绑定 this 和多个参数。
 
 ### `toArray` 将类数组转为数组
 
