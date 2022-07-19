@@ -14,5 +14,9 @@
   "【源码共读】为什么 Vue2 this 能够直接获取到 data 和 methods ?": {
     "order": 23,
     "url": "https://juejin.cn/post/7092564785161568293"
+  },
+  "【源码共读】【源码解读】axios 工具函数 | 来了解一下 axios 定义了哪些工具函数": {
+    "order": 19,
+    "url": "https://juejin.cn/post/7083113675879350309"
   }
 }
