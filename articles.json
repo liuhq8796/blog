@@ -10,5 +10,9 @@
   "【源码共读】yocto-queue | 队列链表": {
     "order": 32,
     "url": "https://juejin.cn/post/7090769807804956679"
+  },
+  "【源码共读】为什么 Vue2 this 能够直接获取到 data 和 methods ?": {
+    "order": 23,
+    "url": "https://juejin.cn/post/7092564785161568293"
   }
 }
