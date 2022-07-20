@@ -22,5 +22,9 @@
   "【源码共读】Vue3 工具函数 | 初学者也能看懂的 Vue3 源码中那些实用的基础工具函数": {
     "order": 2,
     "url": "https://juejin.cn/post/7084991376630218759"
+  },
+  "【最佳实践】重置 box-sizing": {
+    "type": 2,
+    "title": "重置 box-sizing"
   }
 }
