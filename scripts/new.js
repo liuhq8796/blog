@@ -15,6 +15,7 @@ const questions = [
     choices: [
       { title: "无", value: 0 },
       { title: "源码共读", value: 1 },
+      { title: "最佳实践", value: 2}
     ],
     initial: 0,
   },
@@ -51,11 +52,25 @@ async function init() {
   try {
     result = await prompts(questions);
 
+    let prefix = "";
+    switch (result.type) {
+      case 0:
+        prefix = "";
+        break;
+      case 1:
+        prefix = "【源码共读】";
+        break;
+      case 2:
+        prefix = "【最佳实践】";
+        break;
+      default:
+        prefix = "";
+        break;
+    }
+
     // 文件名
     const fileName =
-      (result.type === 1
-        ? "【源码共读】" + result.title + ".md"
-        : result.title + ".md").replace(/\s+/g, "_");
+      (prefix + result.title).replace(/\s+/g, "_") + ".md";
 
     // 笔记路径
     const notePath = path.join(__dirname, "../notes");
@@ -65,7 +80,7 @@ async function init() {
     if (result.type === 1) {
       file = {
         fileName: fileName,
-        content: `# 【源码共读】${result.title}
+        content: `# ${prefix}${result.title}
 
 ## 前言
 
@@ -73,21 +88,21 @@ async function init() {
 
 > 这是源码共读的第 ${result.order} 期，链接：${result.url}。`,
       };
+    } else if (result.type === 2) {
+      file = {
+        fileName: fileName,
+        content: `# ${prefix}${result.title}`,
+      };
     }
 
     // 添加到 articles.json 文件中
     const articles = require("../articles.json");
-    const key = result.type === 1
-    ? "【源码共读】" + result.title
-    : result.title;
+    const key = prefix + result.title;
     if (articles[key]) {
       console.error("文件名已存在 - File name already exists");
       process.exit(1);
     }
-    articles[key] = {
-      order: result.order,
-      url: result.url,
-    };
+    articles[key] = result;
     fileSave(path.join(__dirname, "../articles.json"))
       .write(JSON.stringify(articles, null, 2), "utf8")
       .end("\n");
