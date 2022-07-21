@@ -70,7 +70,7 @@ async function init() {
 
     // 文件名
     const fileName =
-      (prefix + result.title).replace(/\s+/g, "_") + ".md";
+      (prefix + result.title).replace( /[<>:"\/\\|?*]+/g, '' ).trim().replace(/\s+/, ' ') + ".md";
 
     // 笔记路径
     const notePath = path.join(__dirname, "../notes");
