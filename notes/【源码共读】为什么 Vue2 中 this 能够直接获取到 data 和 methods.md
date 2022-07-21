@@ -1,4 +1,4 @@
-# 【源码共读】为什么 Vue2 this 能够直接获取到 data 和 methods ?
+# 【源码共读】为什么 Vue2 中 this 能够直接获取到 data 和 methods ?
 
 ## 前言
 
