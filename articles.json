@@ -56,5 +56,11 @@
     "title": "【源码解读】only-allow | 一行代码统一规范包管理器",
     "order": 16,
     "url": "https://juejin.cn/post/7083149201869111304"
+  },
+  "【源码共读】validate-npm-package-name | 验证 npm 包名是否合法": {
+    "type": 1,
+    "title": "validate-npm-package-name | 验证 npm 包名是否合法",
+    "order": 7,
+    "url": "https://juejin.cn/post/7084985308839673886"
   }
 }
