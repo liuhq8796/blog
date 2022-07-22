@@ -50,5 +50,11 @@
     "title": "remote-git-tags | 获取 git 仓库所有 tags，还学到了 callback 函数 promisify 化的源码实现",
     "order": 14,
     "url": "https://juejin.cn/post/7093858913480622087/"
+  },
+  "【源码共读】【源码解读】only-allow | 一行代码统一规范包管理器": {
+    "type": 1,
+    "title": "【源码解读】only-allow | 一行代码统一规范包管理器",
+    "order": 16,
+    "url": "https://juejin.cn/post/7083149201869111304"
   }
 }
