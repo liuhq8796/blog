@@ -44,5 +44,11 @@
     "title": "await-to-js 如何优雅的捕获 await 的错误",
     "order": 21,
     "url": "https://juejin.cn/post/7083109687591338021"
+  },
+  "【源码共读】remote-git-tags | 获取 git 仓库所有 tags，还学到了 callback 函数 promisify 化的源码实现": {
+    "type": 1,
+    "title": "remote-git-tags | 获取 git 仓库所有 tags，还学到了 callback 函数 promisify 化的源码实现",
+    "order": 14,
+    "url": "https://juejin.cn/post/7093858913480622087/"
   }
 }
