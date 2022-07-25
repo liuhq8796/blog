@@ -62,5 +62,11 @@
     "title": "validate-npm-package-name | 验证 npm 包名是否合法",
     "order": 7,
     "url": "https://juejin.cn/post/7084985308839673886"
+  },
+  "【源码共读】omit.js 剔除对象中的属性": {
+    "type": 1,
+    "title": "omit.js 剔除对象中的属性",
+    "order": 36,
+    "url": "https://juejin.cn/post/7118782469360320542"
   }
 }
