@@ -15,7 +15,7 @@ const questions = [
     choices: [
       { title: "无", value: 0 },
       { title: "源码共读", value: 1 },
-      { title: "最佳实践", value: 2}
+      { title: "最佳实践", value: 2 },
     ],
     initial: 0,
   },
@@ -70,29 +70,37 @@ async function init() {
 
     // 文件名
     const fileName =
-      (prefix + result.title).replace( /[<>:"\/\\|?*]+/g, '' ).trim().replace(/\s+/, ' ') + ".md";
+      (prefix + result.title)
+        .replace(/[<>:"\/\\|?*]+/g, "")
+        .trim()
+        .replace(/\s+/, " ") + ".md";
 
     // 笔记路径
     const notePath = path.join(__dirname, "../notes");
 
     let file = {};
 
-    if (result.type === 1) {
-      file = {
-        fileName: fileName,
-        content: `# ${prefix}${result.title}
-
-## 前言
-
-> 本文参加了由 [公众号@若川视野](https://lxchuan12.gitee.io/) 发起的每周源码共读活动，点击[了解详情](https://juejin.cn/post/7079706017579139102)一起参与。
-
-> 这是源码共读的第 ${result.order} 期，链接：${result.url}。`,
-      };
-    } else if (result.type === 2) {
-      file = {
-        fileName: fileName,
-        content: `# ${prefix}${result.title}`,
-      };
+    switch (result.type) {
+      case 1:
+        file = {
+          fileName: fileName,
+          content: `# ${prefix}${result.title}
+  
+  ## 前言
+  
+  > 本文参加了由 [公众号@若川视野](https://lxchuan12.gitee.io/) 发起的每周源码共读活动，点击[了解详情](https://juejin.cn/post/7079706017579139102)一起参与。
+  
+  > 这是源码共读的第 ${result.order} 期，链接：${result.url}。`,
+        };
+        break;
+      case 0:
+      case 2:
+      default:
+        file = {
+          fileName: fileName,
+          content: `# ${prefix}${result.title}`,
+        };
+        break;
     }
 
     // 添加到 articles.json 文件中
