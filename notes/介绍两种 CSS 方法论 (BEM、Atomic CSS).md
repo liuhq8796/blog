@@ -243,6 +243,8 @@ John Polacek 在 文章 Let’s Define Exactly What Atomic CSS is 中写道：
 
 CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/technologies/css-frameworks
 
+目前已经在使用 Atomic CSS 的网站有：Facebook、Twitter、StackOverflow、segmentfault 等。
+
 #### Atomic CSS 的优势
 
 在谈 Atomic CSS 的优势之前，先来看看相对的 Semantic CSS (语义化 CSS) 通常会遇到的问题：
