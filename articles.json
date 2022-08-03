@@ -72,5 +72,9 @@
   "如何组织CSS": {
     "type": 0,
     "title": "如何组织CSS"
+  },
+  "去除 Element UI 中 el-upload 组件文件列表上 \"按 delete 键可删除\"提示": {
+    "type": 0,
+    "title": "去除 Element UI 中 el-upload 组件文件列表上 \"按 delete 键可删除\"提示"
   }
 }
