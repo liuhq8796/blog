@@ -76,5 +76,9 @@
   "去除 Element UI 中 el-upload 组件文件列表上 \"按 delete 键可删除\"提示": {
     "type": 0,
     "title": "去除 Element UI 中 el-upload 组件文件列表上 \"按 delete 键可删除\"提示"
+  },
+  "【最佳实践】husky + lint-staged 项目代码提交前检查": {
+    "type": 2,
+    "title": "husky + lint-staged 项目代码提交前检查"
   }
 }
