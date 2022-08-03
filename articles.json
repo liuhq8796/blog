@@ -80,5 +80,9 @@
   "【最佳实践】husky + lint-staged 项目代码提交前检查": {
     "type": 2,
     "title": "husky + lint-staged 项目代码提交前检查"
+  },
+  "【最佳实践】vs code 保存时自动格式化": {
+    "type": 2,
+    "title": "vs code 保存时自动格式化"
   }
 }
