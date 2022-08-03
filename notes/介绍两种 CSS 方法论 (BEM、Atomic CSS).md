@@ -17,9 +17,9 @@
 
 ## 现状
 
-单纯的使用 Vue 单文件组件提供的 CSS 作用域能力来实现样式隔离。
+使用 Vue 单文件组件提供的 CSS 作用域能力来实现样式隔离，当 `style` 标签带有 `scoped` 属性的时候，它的 CSS 只会应用到当前组件的元素上。
 
-当 `style` 标签带有 `scoped` 属性的时候，它的 CSS 只会应用到当前组件的元素上。它的实现方式是通过 PostCSS 将以下内容：
+它的实现方式是通过 PostCSS 将以下内容：
 
 ```html
 <style scoped>
@@ -61,13 +61,13 @@
 
 - 样式冗余，浪费性能。
 
-  如果你的项目中有很多组件，每个组件都需要一份独立的样式，那么即使是同样的样式最终也会生成两套 CSS，你的项目就会变得很大。并且随着项目体积的增长，样式的数量也会增加。
+  如果你的项目中有很多组件，每个组件都需要一份独立的样式，那么即使是同样的样式最终也会生成两套 CSS，你的项目就会变得很大。并且随着项目需求的增加，样式的数量也会随之增加。
 
 - 过于依赖，导致开发者养成非常不好的命名习惯。
 
   过渡依赖 `scoped` 属性的话，大家都用那么些个常用的单词做类名，如果哪天脱离了 Vue，没有 `scoped` 了，沿用这种习惯写出来的样式就会直接打起来。
 
-总的来说，`scoped` 方式更适合一些小型项目，但在制作大型项目的时候，这种方式就显得不够优雅了。因此，为了更好地支持大型项目，更优雅的编写 CSS，我们需要完成在编写 CSS 维持统一性的工作。
+总的来说，`scoped` 方式更适合一些小型项目，但在制作大型项目的时候，这种方式就显得不够优雅了。因此，为了更好地支持大型项目，更优雅的编写 CSS，我们需要完成在编写 CSS 时维持统一性的工作。
 
 好消息是，我们不必自己编写 CSS 的规则，可以选择接纳一个已经由社群设计、经由诸多项目检验的方法，并从中获益。而且因为这些体系许多都是被广泛使用的，其他的开发者更有可能理解你在使用的方式，会以相同的方式编写他们自己的代码。
 
@@ -77,7 +77,9 @@
 
 #### 什么是 BEM
 
-BEM 即为块级(Block)、元素(Element)、修饰符(Modifier)的缩写，它是一种简单的 CSS 命名方式，它的目的是为了让 CSS 的样式更具可读性、可维护性。该方法论有以下三部分组成：
+BEM 即为块级(Block)、元素(Element)、修饰符(Modifier)的缩写，它是一种简单的 CSS 命名方式，它的目的是为了让 CSS 的样式更具可读性、可维护性。
+
+该方法论有以下三部分组成：
 
 - Block：尽量以元素的性质来命名对象，多个单词之间以 `-` 将其分割，例如 `.el-form-item`、`.van-button` 等等。
 - Element：使用 `__` 两个下换线来连接 Block 对象，例如 `.el-form-item__label`、`.van-button__content` 等等。
@@ -98,35 +100,34 @@ BEM 的好处是，可以从 HTML 代码中很明显的看到其关联性，获�
       <h3>标题</h3>
     </div>
     <div class="content">
-      <button class="button-primary"></button>
-      <button class="button-default loading"></button>
+      <button class="button-primary">确认</button>
+      <button class="button-loading">取消</button>
     </div>
   </div>
 </template>
 
 <style>
-  .card {
-    // ...
-  }
-  .header {
-    // ...
-  }
-  .content {
-    // ...
-  }
-  .button-primary {
-    // ...
-  }
-  .button-default {
-    // ...
-  }
-  .loading {
-    // ...
-  }
+.card {
+  // 卡片样式
+}
+.header {
+  // 头部样式
+}
+.content {
+  // 内容样式
+}
+.button-primary {
+  // 按钮基础样式
+  // primary 样式
+}
+.button-loading {
+  // 按钮基础样式
+  // loading 样式
+}
 </style>
 ```
 
-这种写法从 DOM 结构和类命名上也可以了解每个元素的意义，但是无法明确其真实的层级关系。在定义 css 时，也必需依靠层级选择器来限定约束作用域，以避免样式污染。
+这种写法从 DOM 结构和类命名上也可以了解每个元素的意义，但是无法明确其真实的层级关系。
 
 使用了 BEM 命名法的示例：
 
@@ -137,38 +138,37 @@ BEM 的好处是，可以从 HTML 代码中很明显的看到其关联性，获�
       <h3>标题</h3>
     </div>
     <div class="card__content">
-      <button class="card__button--primary"></button>
-      <button class="card__button--default"></button>
+      <button class="button button--primary">确认</button>
+      <button class="button button--loading">取消</button>
     </div>
   </div>
 </template>
 
 <style>
-  .card {
-    // ...
-  }
-  .card__header {
-    // ...
-  }
-  .card__content {
-    // ...
-  }
-  .card__button {
-    // ...
-  }
-  .card__button--primary {
-    // ...
-  }
-  .card__button--default {
-    // ...
-  }
-  .card__button--loading {
-    // ...
-  }
+.card {
+  // 卡片样式
+}
+.card__header {
+  // 卡片顶部样式
+}
+.card__content {
+  // 卡片内容样式
+}
+.button {
+  // 按钮基础样式
+}
+.button--primary {
+  // primary 样式
+}
+.button--loading {
+  // loading 样式
+}
 </style>
 ```
 
-通过 BEM 命名法，我们可以很清晰的看到每个元素的层级关系，并且 CSS 书写上也不必做过多的层级选择。严格按照 BEM 模式命名的话，甚至不需要 `scoped` 就能避免样式冲突。样式复用和减小体积体现在：只需要定义好 Block 或 Element 的基础样式，在 Modifier 的定义中就可以只书写那些个存在差异的 css 属性了。
+通过 BEM 命名法，我们可以很清晰的看到每个元素的层级关系，并且 CSS 书写上也不必做过多的层级选择。严格按照 BEM 模式命名的话，甚至不需要 `scoped` 就能避免样式冲突。
+
+同时样式复用和减小体积在这里也有体现：只需要定义好 button 的基础样式，在不同的 Modifier 中就可以只定义那些个存在差异的 css 属性了。
 
 #### 在 CSS 预处理器中使用 BEM
 
@@ -178,23 +178,22 @@ BEM 的好处是，可以从 HTML 代码中很明显的看到其关联性，获�
 
 ```less
 .card {
-  .&__header {
+  // ...
+  &__header {
     // ...
   }
-  .&__content {
+  &__content {
     // ...
   }
-  .&__button {
+}
+
+.button {
+  // ...
+  &--primary {
     // ...
-    &--primary {
-      // ...
-    }
-    &--default {
-      // ...
-    }
-    &--loading {
-      // ...
-    }
+  }
+  &--loading {
+    // ...
   }
 }
 ```
@@ -353,10 +352,10 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 </style>
 ```
 
-而使用原子化 CSS 框架 tailwindcss 的话就可以改造成下面这样：
+而使用原子化 CSS 框架 Tailwind CSS 的话就可以改造成下面这样：
 
 ```html
-<div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-mg flex items-center space-x-4">
+<div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4">
   <div class="shrink-0">
     <img class="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo">
   </div>
@@ -367,28 +366,34 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 </div>
 ```
 
-一个很明显的变化是——CSS 样式定义不见了！
-
-准确来说并不是不见了，而是框架将他们作为全局样式替你定义好了，不需要我们再在组件里定义了，也就不需要你绞尽脑汁的想一个符合语境的类名，只要写你需要的样式就可以了。
+一个很明显的变化是——CSS 样式定义不见了！准确来说并不是不见了，而是框架将他们作为全局样式替你定义好了。
 
 在上面的示例中，我们使用了：
 
 - 使用了 **flexbox** 和 **padding** 功能类(`flex`, `flex-shrink-0`, 和 `p-6`)来控制整体的卡片布局
 - 使用 **max-width** 和 **margin** 功能类(`max-w-sm`, `mx-auto`)来设置卡片的宽度和水平居中
-- 使用 **background color**，**border radius**，和 **box-shadow** 功能类(`bg-white`, `rounded-xl`, 和 `shadow-md`)设置卡片的外观样式
-- 使用 width 和 height 功能类(`w-12`, `h-12`)来设置 logo 图片的大小
-- 使用 space-between 功能类(`space-x-4`)来处理 logo 和文本之间的间距
-- 使用 font size, text color, 和 font-weight 功能类(`text-xl`, `text-black`, `font-medium` 等等)给卡片文字设置样式
+- 使用 **background color**，**border radius**，和 **box-shadow** 功能类(`bg-white`, `rounded-xl`, 和 `shadow-lg`)设置卡片的外观样式
+- 使用 **space-between** 功能类(`space-x-4`)来处理 logo 和文本之间的间距
+- 使用 **width** 和 **height** 功能类(`w-12`, `h-12`)来设置 logo 图片的大小
+- 使用 **font size**, **text color**, 和 **font-weight** 功能类(`text-xl`, `text-black`, `font-medium` 等等)给卡片文字设置样式
 
-除了解决了命名麻烦的问题，同时还解决了另外两个问题：难以复用和css文件大小膨胀。当你完成了这个卡片进入到下一个组件的开发中时，即使是另一个完全不同的组件，这些样式作为全局样式依然是可以复用的。而因为解决了样式复用的问题，你就不会再有或很少有新的独立样式生成，长此以往就能够大大减小项目里css文件的大小。
+像这样将 css 属性拆分成小巧单一的class，不仅解决了命名麻烦的问题，同时还解决了难以复用和css文件大小膨胀的问题。
+
+即使是另一个完全不同的组件，作为全局样式这些 class 依然是可以复用的。而因为你用的一直是同一份全局 css，你就不会再有或很少有新的独立样式生成，长此以往就能够大大减小项目里css文件的大小。
 
 当然，即使是不使用类似的框架，我们按自己的规则定义一套通用的样式的话，这些优势也依然存在。
 
-除了对比传统方式的优势，Atomic CSS 作为一个正在发展方法论还是存在一些不足：
+#### 目前存在的不足
 
-- 命名麻烦，你需要为所有用到的 CSS 属性定义好类名。但好在现在已经出现了很多 Atomic CSS 框架代替我们做了这部分工作，即使是不用框架只参考他们的类名写法也可以减少很大的工作量。
+Atomic CSS 也不是不存在缺点，作为一个正在发展方法论还是存在一些不足：
 
-- HTML 变的十分丑陋。作为一个开发者，我想谁也不会愿意在自己的代码里到处复制和维护这样的一串代码：
+- 命名麻烦，你需要为所有用到的 CSS 属性定义好类名。
+
+  但好在现在已经出现了很多 Atomic CSS 框架代替我们做了这部分工作，即使是不适合中途增加新框架的项目，只参考他们的类名写法也可以减少很大的工作量。
+
+- HTML 变的十分丑陋。
+
+  作为一个开发者，我想谁也不会愿意在自己的代码里到处复制和维护这样的一个 button：
 
   ```html
   <button class="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
@@ -398,11 +403,13 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 
   所以在事情发展的更加不可收拾之前，将他们提取成组件是个好主意。
 
-- 学习成本。虽然作为例子的 Tailwind CSS 在类名定义的直觉性上已经做的很好了，基本上能做到见名知意，但当你想用某个 css 属性的时候，仍然不可避免的需要去查阅文档进行确认。
+- 学习成本。
 
-  这部分问题框架作者也在积极地辅助解决，Tailwind CSS 和 Windi CSS 就已经发布了 IDE 的智能提示插件来辅助你找到正确的类名。个人试了一下，对于常用的 CSS 属性很有帮助，但对于生僻些的还是文档的查询功能更方便。
+  虽然作为例子的 Tailwind CSS 在类名定义的直觉性上已经做的很好了，基本上能做到见名知意，但当你想用某个 css 属性的时候，仍然不可避免的需要去查阅文档进行确认。
 
-- 精确控制受到框架的限制。虽然大部分样式都由框架代劳了，但是一些极其定制化的要求，比如精确的颜色控制、元素大小、背景图片等，框架还需要需要额外且复杂的配置。
+- 精确控制受到框架的限制。
+
+  虽然大部分样式都由框架代劳了，但是一些极其定制化的要求，比如精确的颜色控制、元素大小、背景图片等，框架还需要需要额外且复杂的配置。
 
 ## 关于如何选择两种方法论的个人看法
 
