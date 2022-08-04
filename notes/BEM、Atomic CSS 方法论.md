@@ -1,21 +1,74 @@
 # BEM、Atomic CSS 方法论
 
-## 大纲
+## 文章内容
 
-- 现状
+- 常规方式
+  - 语义化命名
+  - Vue CSS 作用域
 - 介绍两种 CSS 方法论
-  - BEM —— 最流行
+  - BEM
     - 什么是 BEM
     - BEM 命名法的优势
     - 在 CSS 预处理器中使用 BEM
     - 使用建议
-  - Atomic CSS —— 最有潜力
+  - Atomic CSS
     - 什么是 Atomic CSS
     - Atomic CSS 的优势
     - 目前存在的不足
 - 关于如何选择两种方法论的个人看法
 
-## 现状
+## 常规方式
+
+简单说说我自己用的最多的两种常规方式吧，一种是学习前端一定都听说过的语义化命名，另一种是 Vue 提供的 CSS 作用域。
+
+### 语义化命名
+
+简单概述一下语义化命名就是：基于它*是*什么来命名，而不是基于它*像*什么或*能做*什么来命名。
+
+举一个例子：
+
+```html
+<!-- layout -->
+<div class="header"></div>
+<div class="main"></div>
+<div class="sidebar"></div>
+<div class="footer"></div>
+
+<!-- component -->
+<div class="card">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Card's content.</p>
+  </div>
+</div>
+```
+
+像这样的命名，一眼看过去就能知道每个元素它是什么，这就是典型的语义化命名。
+
+这样做的好处显而易见：
+
+- 更好的理解元素的作用，所见即所得
+
+- 更容易查找元素。
+
+  比如在自动化测试中就需要准确的定位元素，这时候这种命名法就会很有用。
+
+但随着项目的发展，这种方法的缺点也越来越明显：
+
+- 命名困难。
+
+  在业务耦合的复杂场景下，很难为你的元素起一个符合语义化要求的类名，这对开发人员来说也是一个不小的心智负担，尤其是当你的词汇量还不是那么充足的情况下。
+
+- 难以复用。
+
+  有一种情况在开发中经常会出现：在不同的组件下写了很多大体类似但细节不同的类，例如：`card-title`、`nav-title`、`dialog-title` 等等，这些类很可能只是其中一条 css 规则不同，例如 `font-size`，但你仍然要为他们定义各自语义不同的类。
+
+- css 文件大小膨胀。
+
+  在无法得到复用的情况下，class 中包含大量重复的 css 属性，这会导致随着项目需求的增加，css 文件也变的越来越大。
+
+### Vue CSS 作用域
 
 使用 Vue 单文件组件提供的 CSS 作用域能力来实现样式隔离，当 `style` 标签带有 `scoped` 属性的时候，它的 CSS 只会应用到当前组件的元素上。
 
@@ -246,13 +299,7 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 
 #### Atomic CSS 的优势
 
-在谈 Atomic CSS 的优势之前，先来看看相对的 Semantic CSS (语义化 CSS) 通常会遇到的问题：
-
-- 命名困难。越来越多的相似场景下，很难为你的元素起一个符合语义化要求的类名，这对开发人员来说也是一个不小的心智负担。
-- 难以复用。如果你的 CSS 样式采用的是语义化命名，那么在不同的组件下，可能会出现一些大体类似但细节不同的类，例如：`nav-title`、`card-title`、`dialog-title` 等等，这些类很可能只是其中一条 css 规则不同，例如 `font-size`。
-- css 文件大小膨胀。每个 class 都包含大量重复的 css 样式，无法解决复用性。这会导致随着项目需求的增加，css 文件变的越来越大。
-
-那么，Atomic CSS 是如何解决这些问题的呢？引用一个 Tailwind CSS 官网的例子：
+引用一个 Tailwind CSS 官网的例子：
 
 <div class="semantic-css">
   <div class="chat-notification">
