@@ -1,4 +1,4 @@
-# 介绍两种 CSS 方法论 (BEM、Atomic CSS)
+# BEM、Atomic CSS 方法论
 
 ## 大纲
 
@@ -85,7 +85,7 @@ BEM 即为块级(Block)、元素(Element)、修饰符(Modifier)的缩写，它�
 - Element：使用 `__` 两个下换线来连接 Block 对象，例如 `.el-form-item__label`、`.van-button__content` 等等。
 - Modifier：使用 `--` 两个中横杠来连接 Block 或 Element 对象，例如 `.el-form-item--mini`、`.van-button--primary` 等等。
 
-![BEM](<../imgs/%E4%BB%8B%E7%BB%8D%E4%B8%A4%E7%A7%8D%20CSS%20%E6%96%B9%E6%B3%95%E8%AE%BA%20(BEM%E3%80%81Atomic%20CSS).png>)
+![BEM](../imgs/BEM%E3%80%81Atomic%20CSS%20%E6%96%B9%E6%B3%95%E8%AE%BA.png)
 
 #### BEM 命名法的优势
 
@@ -257,7 +257,7 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 <div class="semantic-css">
   <div class="chat-notification">
     <div class="chat-notification-logo-wrapper">
-      <img class="chat-notification-logo" src="../imgs/介绍两种 CSS 方法论 (BEM、Atomic CSS)(1).svg" alt="ChitChat Logo">
+      <img class="chat-notification-logo" src="../imgs/BEM、Atomic CSS 方法论(1).svg" alt="ChitChat Logo">
     </div>
     <div class="chat-notification-content">
       <h4 class="chat-notification-title">ChitChat</h4>

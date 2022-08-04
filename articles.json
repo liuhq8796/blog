@@ -69,9 +69,9 @@
     "order": 36,
     "url": "https://juejin.cn/post/7118782469360320542"
   },
-  "如何组织CSS": {
+  "BEM、Atomic CSS 方法论": {
     "type": 0,
-    "title": "如何组织CSS"
+    "title": "BEM、Atomic CSS 方法论"
   },
   "去除 Element UI 中 el-upload 组件文件列表上 \"按 delete 键可删除\"提示": {
     "type": 0,
