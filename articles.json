@@ -95,5 +95,10 @@
     "type": 3,
     "title": "实现 Pick",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00004-easy-pick/README.md"
+  },
+  "【TS 类型体操】实现 Omit": {
+    "type": 3,
+    "title": "实现 Omit",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00003-medium-omit/README.md"
   }
 }
