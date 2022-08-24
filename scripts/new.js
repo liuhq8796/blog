@@ -16,6 +16,7 @@ const questions = [
       { title: "无", value: 0 },
       { title: "源码共读", value: 1 },
       { title: "最佳实践", value: 2 },
+      { title: "TS 类型体操", value: 3 },
     ],
     initial: 0,
   },
@@ -36,13 +37,21 @@ const questions = [
   },
   {
     type: (prev, values, prompt) => {
-      if (values.type === 1) {
+      if (values.type === 1 || values.type === 3) {
         return "text";
       }
       return null;
     },
     name: "url",
-    message: "请输入源码共读链接",
+    message: (prev, values, prompt) => {
+      if (values.type === 1) {
+        return "请输入源码共读链接"
+      } else if (values.type === 3) {
+        return "请输入挑战链接"
+      } else {
+        return ""
+      }
+    },
   },
 ];
 
@@ -62,6 +71,9 @@ async function init() {
         break;
       case 2:
         prefix = "【最佳实践】";
+        break;
+      case 3:
+        prefix = "【TS 类型体操】";
         break;
       default:
         prefix = "";
@@ -92,6 +104,20 @@ async function init() {
 
 > 这是源码共读的第 ${result.order} 期，链接：${result.url}。`,
         };
+        break;
+      case 3:
+        file = {
+          fileName: fileName,
+          content: `# ${prefix}${result.title}
+
+## 前言
+
+本系列用来记录我在 [type-challenges](https://github.com/type-challenges/type-challenges) 项目中的挑战笔记。
+
+题目链接：${result.url}
+
+## 题目`
+        }
         break;
       case 0:
       case 2:
