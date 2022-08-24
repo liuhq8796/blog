@@ -90,5 +90,10 @@
     "title": "开发神器 Vite 发布 3.0 了，研究一波 create-vite 源码",
     "order": 37,
     "url": "https://juejin.cn/post/7129087028947320862"
+  },
+  "【TS 类型体操】实现 Pick": {
+    "type": 3,
+    "title": "实现 Pick",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00004-easy-pick/README.md"
   }
 }
