@@ -105,5 +105,10 @@
     "type": 3,
     "title": "实现 Exclude",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00043-easy-exclude/README.md"
+  },
+  "【TS 类型体操】实现 Readonly": {
+    "type": 3,
+    "title": "实现 Readonly",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00007-easy-readonly/README.md"
   }
 }
