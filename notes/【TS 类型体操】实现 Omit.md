@@ -51,4 +51,5 @@ type MyOmit<T, K extends keyof T> = {
 ## 相关挑战
 
 [【TS 类型体操】实现 Pick](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E5%AE%9E%E7%8E%B0%20Pick.md)
+
 [【TS 类型体操】实现 Exclude](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E5%AE%9E%E7%8E%B0%20Exclude.md)
