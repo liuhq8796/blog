@@ -35,7 +35,7 @@ todo.completed = true // OK
 ## 实现 & 解析
 
 ```ts
-type MyReadonly2<T, K extends keyof T> = Readonly<Pick<T, K>> & Omit<T, K>
+type MyReadonly2<T, K extends keyof T = keyof T> = Readonly<Pick<T, K>> & Omit<T, K>
 ```
 
 关键字解析：
@@ -47,6 +47,8 @@ type MyReadonly2<T, K extends keyof T> = Readonly<Pick<T, K>> & Omit<T, K>
 - `keyof`: `keyof` 运算符应用于对象类型并生成其作为键的字符串或数字的联合类型。
 
   所以这里的 `K extends keyof T` 是说 `K` 被约束在 `T` 的键名组合成的联合类型中，不能超出这个范围，否则会报错的。
+
+  另外，如果没有提供 `K`，则会已默认值 `Keyof T` 作为 `K`。
 
 - `&`: 将多个类型合并为一个类型，包含了所有类型的特性，而且要同时满足要交叉的所有类型。
 
