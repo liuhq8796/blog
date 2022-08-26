@@ -42,9 +42,9 @@ type MyOmit<T, K extends keyof T> = {
 
 - `keyof`: `keyof` 运算符应用于对象类型并生成其作为键的字符串或数字的联合类型。
 
-  所以这里的 `K extends keyof T` 是说 K 被约束在 T 的键名组合成的联合类型中，不能超出这个范围，否则会报错的。
+  所以这里的 `K extends keyof T` 是说 `K` 被约束在 `T` 的键名组合成的联合类型中，不能超出这个范围，否则会报错的。
 
-- `in`: `P in Exclude<keyof T, K>` 执行了一个循环（可以理解为类似 for...in 的效果），这里的 `Exclude` 返回一个联合类型，而 P 是一个标识符，它映射为 `Exclude` 返回的联合类型的每一个子类型。
+- `in`: `P in Exclude<keyof T, K>` 执行了一个循环（可以理解为类似 `for...in` 的效果），这里的 `Exclude` 返回一个联合类型，而 `P` 是一个标识符，它映射为 `Exclude` 返回的联合类型的每一个子类型。
 
 - `Exclude`: `Exclude<T, K>` 通过从 `T` 中排除可分配给 `K` 的所有联合成员来构造类型。这里的 `Exclude<keyof T, K>` 即是从以 `T` 对象中的键作为联合成员的联合类型中，排除可以分配给 `K` 的所有联合成员后，剩余的联合成员组成的联合类型。
 
