@@ -16,7 +16,7 @@ export const EMPTY_OBJ: { readonly [key: string]: any } = __DEV__
   : {};
 ```
 
-`readonly`: 表示该对象的属性均为只读属性。
+- `readonly`: 对于 TypeScript，属性也可以标记为只读。虽然它不会在运行时改变任何行为，但在类型检查期间不能写入标记为只读的属性。
 
 `__DEV__`: 通过 [`@rollup/plugin-replace`](https://github.com/rollup/plugins/tree/master/packages/replace) 插件全局替换成设定的值，为了方便理解可以看作是 `process.env.NODE_ENV !== 'production'`。
 
