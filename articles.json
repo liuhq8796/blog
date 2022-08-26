@@ -110,5 +110,10 @@
     "type": 3,
     "title": "实现 Readonly",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00007-easy-readonly/README.md"
+  },
+  "【TS 类型体操】实现 Readonly 2": {
+    "type": 3,
+    "title": "实现 Readonly 2",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00008-medium-readonly-2/README.md"
   }
 }
