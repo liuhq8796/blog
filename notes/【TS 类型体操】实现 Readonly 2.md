@@ -32,6 +32,10 @@ todo.description = "barFoo" // Error: cannot reassign a readonly property
 todo.completed = true // OK
 ```
 
+关键字解析：
+
+- `interface`: 接口声明是命名对象类型的一种方式。
+
 ## 题解
 
 ```ts

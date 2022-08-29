@@ -34,6 +34,10 @@ type Expected = {
 type Todo = DeepReadonly<X> // should be same as `Expected`
 ```
 
+关键字解析：
+
+- `type`: `type` 的作用就是给任意的类型起一个别名，通常用来给联合类型进行重命名，给对象类型进行命名时作用与 `interface` 类似，区别是 `type` 不能用同名类型进行扩展。
+
 ## 题解
 
 ```ts
@@ -53,8 +57,6 @@ type DeepReadonly<T> = keyof T extends never
 ```
 
 关键字解析：
-
-- `type`: `type` 的作用就是给任意的类型起一个别名，通常用来给联合类型进行重命名，给对象类型进行命名时作用与 `interface` 类似，区别是 `type` 不能用同名类型进行扩展。
 
 - `readonly`: 对于 TypeScript，属性也可以标记为只读。虽然它不会在运行时改变任何行为，但在类型检查期间不能写入标记为只读的属性。
 
