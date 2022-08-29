@@ -29,7 +29,7 @@ todo.title = "Hello" // Error: cannot reassign a readonly property
 todo.description = "barFoo" // Error: cannot reassign a readonly property
 ```
 
-## 实现 & 解析
+## 题解
 
 ```ts
 type MyReadonly<T> = {

@@ -18,7 +18,7 @@
 type Result = MyExclude<'a' | 'b' | 'c', 'a'> // 'b' | 'c'
 ```
 
-## 实现 & 解析
+## 题解
 
 ```ts
 type MyExclude<T, U> = T extends U ? never : T

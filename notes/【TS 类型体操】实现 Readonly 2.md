@@ -32,7 +32,7 @@ todo.description = "barFoo" // Error: cannot reassign a readonly property
 todo.completed = true // OK
 ```
 
-## 实现 & 解析
+## 题解
 
 ```ts
 type MyReadonly2<T, K extends keyof T = keyof T> = Readonly<Pick<T, K>> & Omit<T, K>

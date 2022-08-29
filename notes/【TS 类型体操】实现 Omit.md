@@ -26,7 +26,7 @@ const todo: TodoPreview = {
 }
 ```
 
-## 实现 & 解析
+## 题解
 
 ```ts
 type MyOmit<T, K extends keyof T> = {

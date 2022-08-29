@@ -34,7 +34,7 @@ type Expected = {
 type Todo = DeepReadonly<X> // should be same as `Expected`
 ```
 
-## 实现 & 解析
+## 题解
 
 ```ts
 type DeepReadonly<T> = {
