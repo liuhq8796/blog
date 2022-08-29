@@ -120,5 +120,10 @@
     "type": 3,
     "title": "实现 Deep Readonly",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00009-medium-deep-readonly/README.md"
+  },
+  "【TS 类型体操】元组转换为对象": {
+    "type": 3,
+    "title": "元组转换为对象",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00011-easy-tuple-to-object/README.md"
   }
 }
