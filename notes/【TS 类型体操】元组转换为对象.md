@@ -74,4 +74,10 @@ type TupleToObject<T extends readonly PropertyKey[]> = {
 
 ## 相关挑战
 
-待补充
+[【TS 类型体操】元组转换为联合类型](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B.md)
+
+Tuple to Enum Object
+
+Union to Tuple
+
+Tuple to Nested Object
