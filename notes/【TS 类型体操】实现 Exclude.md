@@ -30,6 +30,6 @@ type MyExclude<T, U> = T extends U ? never : T
 
 关键字解析：
 
-- `T extends U ? X : Y`: 这是在 ts 2.8 中引入的条件类型，用法和 JS 中的三元运算符类似，这里的意思是：如果 `T` 是 `U` 的子类型的话，那么就会返回 `X`，否者返回 `Y`。
+- `T extends U ? X : Y`: 这是条件类型 [Conditional Types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html)，用法和 JS 中的三元运算符类似，这里的意思是：如果 `T` 是 `U` 的子类型的话，那么就会返回 `X`，否者返回 `Y`。
 
   对于联合类型来说会自动分发条件，假如 `T` 是联合类型 `A | B`，那么实际情况就变成 `(A extends U ? X : Y) | (B extends U ? X : Y)`。

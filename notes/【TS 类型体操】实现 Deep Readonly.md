@@ -64,7 +64,7 @@ type DeepReadonly<T> = keyof T extends never
 
 - `in`: `P in K` 执行了一个循环（可以理解为类似 `for...in` 的效果），这里的 `K` 是一个联合类型，而 `P` 是一个标识符，它映射为 `K` 的每一个子类型。
 
-- `T extends U ? X : Y`: 这是在 ts 2.8 中引入的条件类型，用法和 JS 中的三元运算符类似，这里的意思是：如果 `T` 是 `U` 的子类型的话，那么就会返回 `X`，否者返回 `Y`。
+- `T extends U ? X : Y`: 这是条件类型 [Conditional Types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html)，用法和 JS 中的三元运算符类似，这里的意思是：如果 `T` 是 `U` 的子类型的话，那么就会返回 `X`，否者返回 `Y`。
 
 - `Record<K, T>`: 构造一个对象类型，其属性键为 `K`，其属性值为 `T`。此实用程序可用于将一种类型的属性映射到另一种类型。
 

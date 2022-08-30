@@ -68,7 +68,7 @@ type TupleToObject<T extends readonly PropertyKey[]> = {
 
 - `PropertyKey`: TypeScript 内置类型，相当于 `type PropertyKey = string | number | symbol;`。
 
-- `T[number]`: 可以获取数组 `T` 类型中所有子元素的类型组成联合类型。
+- `T[number]`: 索引访问类型 [Indexed Access Types](https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html)，可以获取数组 `T` 类型中所有子元素的类型组成联合类型。
 
 - `in`: `P in T[number]` 执行了一个循环（可以理解为类似 `for...in` 的效果），这里的 `T[number]` 是一个联合类型，而 `P` 是一个标识符，它映射为 `T[number]` 的每一个子类型。
 
