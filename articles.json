@@ -130,5 +130,10 @@
     "type": 3,
     "title": "元组转换为联合类型",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00010-medium-tuple-to-union/README.md"
+  },
+  "【TS 类型体操】元组转换为枚举对象": {
+    "type": 3,
+    "title": "元组转换为枚举对象",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00472-hard-tuple-to-enum-object/README.md"
   }
 }
