@@ -20,7 +20,7 @@ type result = TupleToObject<typeof tuple> // expected { tesla: 'tesla', 'model 3
 
 关键词解析：
 
-- `as`: 类型断言。有时 TypeScript 无法知道值的准确类型，例如，如果你使用 `document.getElementById`，TypeScript 只知道这将返回某种 `HTMLElement`，但您可能知道您的页面将始终具有给定 ID 的 `HTMLCanvasElement`。
+- `as`: 类型断言 [Type Assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions)。有时 TypeScript 无法知道值的准确类型，例如，如果你使用 `document.getElementById`，TypeScript 只知道这将返回某种 `HTMLElement`，但您可能知道您的页面将始终具有给定 ID 的 `HTMLCanvasElement`。
 
   在这种情况下，您可以使用类型断言来指定更具体的类型：
 
@@ -76,7 +76,7 @@ type TupleToObject<T extends readonly PropertyKey[]> = {
 
 [【TS 类型体操】元组转换为联合类型](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B.md)
 
-Tuple to Enum Object
+[【TS 类型体操】元组转换为枚举对象](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%9E%9A%E4%B8%BE%E5%AF%B9%E8%B1%A1.md)
 
 Union to Tuple
 
