@@ -78,7 +78,7 @@ type UnionToTuple<U, Last = LastInUnion<U>> = [U] extends [never]
 
 - `T extends U ? X : Y`: 这是条件类型 [Conditional Types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html)，用法和 JS 中的三元运算符类似，这里的意思是：如果 `T` 是 `U` 的子类型的话，那么就会返回 `X`，否者返回 `Y`。
 
-- `infer`: 条件类型为我们提供了一种使用 `infer` 关键字从我们在真实分支中比较的类型进行推断的方法。在这里，我们使用 `infer` 关键字声明性地引入了名为 `first` 和 `rest` 的新泛型类型变量，而不是指定如何在 `true` 分支中检索 `T` 的元素类型。
+- `infer`: 条件类型为我们提供了一种使用 `infer` 关键字从我们在真实分支中比较的类型进行推断的方法。参考：https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
 
 ## 详细步骤：
 

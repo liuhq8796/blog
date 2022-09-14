@@ -93,7 +93,9 @@ type Enum<T extends readonly string[], N extends boolean = false> = {
 
 关键字解析：
 
-- `infer`: 条件类型为我们提供了一种使用 `infer` 关键字从我们在真实分支中比较的类型进行推断的方法。在这里，我们使用 `infer` 关键字声明性地引入了名为 `first` 和 `rest` 的新泛型类型变量，而不是指定如何在 `true` 分支中检索 `T` 的元素类型。
+- `infer`: 条件类型为我们提供了一种使用 `infer` 关键字从我们在真实分支中比较的类型进行推断的方法。参考：https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
+
+  在这里，我们使用 `infer` 关键字声明性地引入了名为 `first` 和 `rest` 的新泛型类型变量，而不是指定如何在 `true` 分支中检索 `T` 的元素类型。
 
 - `...`: 剩余参数 [Rest Parameters](https://www.typescriptlang.org/docs/handbook/2/functions.html#rest-parameters) 标识。除了使用可选参数或重载来制作可以接受各种固定参数计数的函数之外，我们还可以使用剩余参数定义接受无限数量参数的函数。rest 参数出现在所有其他参数之后，并使用 ... 语法。
 
