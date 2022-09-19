@@ -150,5 +150,10 @@
     "type": 3,
     "title": "元组转换为嵌套对象",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/03188-medium-tuple-to-nested-object/README.md"
+  },
+  "【TS 类型体操】获取数组的第一个元素": {
+    "type": 3,
+    "title": "获取数组的第一个元素",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00014-easy-first/README.md"
   }
 }
