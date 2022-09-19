@@ -155,5 +155,10 @@
     "type": 3,
     "title": "获取数组的第一个元素",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00014-easy-first/README.md"
+  },
+  "【TS 类型体操】获取数组的最后一个元素": {
+    "type": 3,
+    "title": "获取数组的最后一个元素",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00015-medium-last/README.md"
   }
 }
