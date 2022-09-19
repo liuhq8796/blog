@@ -56,4 +56,4 @@ type TupleToUnion<T> = T extends [infer first, ...infer rest]
 
 [【TS 类型体操】联合类型转换为元组](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%85%83%E7%BB%84.md)
 
-Tuple to Nested Object
+[【TS 类型体操】元组转换为嵌套对象](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%B5%8C%E5%A5%97%E5%AF%B9%E8%B1%A1.md)
