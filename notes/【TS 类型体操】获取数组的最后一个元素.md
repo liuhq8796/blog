@@ -33,7 +33,7 @@ type Last<T extends any[]> = T extends [infer First, ...infer Rest] ? Rest exten
 type Last<T extends any[]> = T extends [infer _, ...infer Other] ? T[Other['length']] : never;
 
 // or
-// 扩展运算符能这么用吗？？
+// 剩余参数能放在前面这么用吗？？
 // 试了下在 js 里无论是作为剩余参数还是解构剩余元素都只能放在最后
 type Last<T extends any[]> = T extends [...infer _, infer Last] ?  Last: never
 
