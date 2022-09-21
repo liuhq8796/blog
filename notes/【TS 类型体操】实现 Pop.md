@@ -27,7 +27,7 @@ type re2 = Pop<arr2> // expected to be [3, 2]
 ## 题解
 
 ```ts
-type Pop<T extends any[]> = T extends [...infer R, unknown] ? R : never
+type Pop<T extends unknown[]> = T extends [...infer U, unknown] ? U : never
 ```
 
 关键字解析：
