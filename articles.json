@@ -160,5 +160,10 @@
     "type": 3,
     "title": "获取数组的最后一个元素",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00015-medium-last/README.md"
+  },
+  "【TS 类型体操】实现 Pop": {
+    "type": 3,
+    "title": "实现 Pop",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00016-medium-pop/README.md"
   }
 }
