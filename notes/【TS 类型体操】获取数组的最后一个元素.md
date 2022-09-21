@@ -33,7 +33,7 @@ type Last<T extends any[]> = T extends [infer First, ...infer Rest] ? Rest exten
 type Last<T extends any[]> = T extends [infer _, ...infer Other] ? T[Other['length']] : never;
 
 // or
-// 扩展运算符能怎么用吗？？
+// 扩展运算符能这么用吗？？
 // 试了下在 js 里无论是作为剩余参数还是解构剩余元素都只能放在最后
 type Last<T extends any[]> = T extends [...infer _, infer Last] ?  Last: never
 
@@ -53,6 +53,8 @@ type Last<T extends any[]> = [never,...T][T["length"]]
 - `infer`: 条件类型为我们提供了一种使用 `infer` 关键字从我们在真实分支中比较的类型进行推断的方法。参考：https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#type-inference-in-conditional-types
 
 - `...`: 剩余参数 [Rest Parameters](https://www.typescriptlang.org/docs/handbook/2/functions.html#rest-parameters) 标识。除了使用可选参数或重载来制作可以接受各种固定参数计数的函数之外，我们还可以使用剩余参数定义接受无限数量参数的函数。rest 参数出现在所有其他参数之后，并使用 ... 语法。
+
+  文档里也没找着剩余参数的 `...` 还能放在前面的例子，但这里确实可以。另外，试了下在 js 里无论是作为剩余参数还是解构剩余元素都只能放在最后。
 
 - `_`: 只是一个占位符，用来代表那些虽然定义了但用不到的类型，防止TS出现已定义未使用的提示。
 
