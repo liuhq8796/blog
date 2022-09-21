@@ -165,5 +165,10 @@
     "type": 3,
     "title": "实现 Pop",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00016-medium-pop/README.md"
+  },
+  "【TS 类型体操】实现 Push": {
+    "type": 3,
+    "title": "实现 Push",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/03057-easy-push/README.md"
   }
 }
