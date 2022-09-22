@@ -53,6 +53,4 @@ type First<T extends any[]> = T['length'] extends 0 ? never : T[0]
 
 ## 相关挑战
 
-[WIP]
-
-Last of Array
+[【TS 类型体操】获取数组的最后一个元素](./%E3%80%90TS%20%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D%E3%80%91%E8%8E%B7%E5%8F%96%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0.md)
