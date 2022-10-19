@@ -170,5 +170,9 @@
     "type": 3,
     "title": "实现 Push",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/03057-easy-push/README.md"
+  },
+  "NGINX 入门实战": {
+    "type": 0,
+    "title": "NGINX 入门实战"
   }
 }
