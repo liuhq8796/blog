@@ -170,5 +170,10 @@
     "type": 3,
     "title": "实现 Push",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/03057-easy-push/README.md"
+  },
+  "【TS 类型体操】获取元组长度": {
+    "type": 3,
+    "title": "获取元组长度",
+    "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00018-easy-tuple-length/README.md"
   }
 }
