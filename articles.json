@@ -175,5 +175,9 @@
     "type": 3,
     "title": "获取元组长度",
     "url": "https://github.com/type-challenges/type-challenges/blob/main/questions/00018-easy-tuple-length/README.md"
+  },
+  "在 Nginx 中运行 JavaScript": {
+    "type": 0,
+    "title": "在 Nginx 中运行 JavaScript"
   }
 }
