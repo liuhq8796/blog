@@ -179,5 +179,9 @@
   "在 Nginx 中运行 JavaScript": {
     "type": 0,
     "title": "在 Nginx 中运行 JavaScript"
+  },
+  "NGINX 入门实战": {
+    "type": 0,
+    "title": "NGINX 入门实战"
   }
 }
