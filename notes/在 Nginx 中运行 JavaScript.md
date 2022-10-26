@@ -14,18 +14,6 @@ C-Modules、Perl、Lua、JavaScript
 
 ![nginx-modules](../imgs/nginx-modules.png)
 
-### NJS 发展历程
-
-nginx 增加脚本能力的又一次尝试
-
-- Perl (2005年)
-  - 优势：所有现有Perl模块；直接嵌入nginx配置文件。
-  - 缺点：无异步支持；Perl 全局解释器。
-- JS 模块 (2015年)
-  - 最流行的脚本语言。
-  - 类似C语言的语法。
-  - 时间驱动处理特性。
-
 ### NJS 核心价值
 
 使用脚本的方式扩展应用服务能力
@@ -34,7 +22,7 @@ nginx 增加脚本能力的又一次尝试
 - 降低使用难度：将JavaScript代码集成到nginx HTTP和流（TCP/UDP）模块的事件处理模型中。
 - 提高产出效率：使用JavaScript代码扩展nginx配置语法，以实现复杂的配置解决方案。
 
-### njs 与 Node.js、JavaScript 的区别
+### NJS 与 Node.js、JavaScript 的区别
 
 一、运行时不同
 
@@ -94,6 +82,18 @@ ngx.fetch('http://nginx.org/en/docs/njs')
 .catch(e => r.return(501, e.message))
 ```
 
+### NJS 模块的用例
+
+- 授权
+  - 生成 JWT 令牌
+  - 根据请求正文内容授权请求
+- 代理
+  - 将多个子请求的结果异步合并到单个回复中
+  - 链式访问多个子请求
+- 修改响应
+  - 修改或删除上游服务器发送的 Cookie
+  - 将响应正文字符转换为小写
+
 ## 真实案例 - 自定义日志输出格式
 
 在下面的示例中，我们使用 NGINX 作为一个简单的 web 服务器，并采用 NGINX JavaScript 构建特定格式的访问日志，日志中包括：
@@ -149,12 +149,24 @@ curl http://127.0.0.1/
 2022-10-19T12:25:32+00:00 client=172.17.0.1 method=GET uri=/index.html status=200 in.Host=127.0.0.1 in.User-Agent=curl/7.79.1 in.Accept=*/* out.ETag=\x22634fec1f-117\x22 out.Accept-Ranges=bytes
 ```
 
+## 总结
+
 ## 相关链接
 
-NJS文档：http://nginx.org/en/docs/njs/
+NJS文档：
 
-应用示例：https://github.com/nginx/njs-examples、https://github.com/f5devcentral/nginx-njs-usecases
+http://nginx.org/en/docs/njs/
 
-博客：https://nginx.com/blog/tag/javascript
+应用示例：
 
-源代码：https://github.com/nginx/njs
+https://github.com/nginx/njs-examples
+
+https://github.com/f5devcentral/nginx-njs-usecases
+
+博客：
+
+https://nginx.com/blog/tag/javascript
+
+源代码：
+
+https://github.com/nginx/njs
