@@ -4,7 +4,7 @@
 
 - 技术背景
 - 初识
-- 真实案例
+- NJS 的用例
 
 ## 技术背景
 
@@ -82,7 +82,9 @@ ngx.fetch('http://nginx.org/en/docs/njs')
 .catch(e => r.return(501, e.message))
 ```
 
-### NJS 模块的用例
+## NJS 的用例
+
+### NJS 能做什么
 
 - 授权
   - 生成 JWT 令牌
@@ -93,63 +95,101 @@ ngx.fetch('http://nginx.org/en/docs/njs')
 - 修改响应
   - 修改或删除上游服务器发送的 Cookie
   - 将响应正文字符转换为小写
+- 记录
+  - 使用json格式记录日志
+  - 记录每个客户端的请求数
+- ......
 
-## 真实案例 - 自定义日志输出格式
+### 真实案例 - 使用json格式记录日志
 
-在下面的示例中，我们使用 NGINX 作为一个简单的 web 服务器，并采用 NGINX JavaScript 构建特定格式的访问日志，日志中包括：
+默认情况下 Nginx 打印出的日志是包含各种字段值的字符串，就像下面这样：
 
-- 请求时间
-- 客户端地址
-- 请求方法
-- 请求路径
-- 请求状态
-- 客户端发送的请求头
-- 后端返回的响应头
+```
+172.23.0.1 - - [27/Oct/2022:12:24:45 +0000] "GET / HTTP/1.1" 200 10 "-" "curl/7.79.1" "-"
+```
+
+这样的格式存在一些缺点：
+
+- 它本身是一种自定义格式 - 如果你想要读取它，需要编写特定的日志解析器
+- 条目可能很长，让人难以阅读
+- 无法记录存在不确定性的值，例如“所有请求头”
+
+我们可以通过使用 NGINX JavaScript 模块（njs）以结构化格式（如JSON）编写日志条目来解决这些问题。
 
 此示例的 NGINX 配置非常简单。
 
 ```nginx
+# nginx.conf
 http {
-    js_import   conf.d/logging.js;              # 从这里加载 js 代码
-    js_set      $access_log logging.kvAccess;   # 用 js 方法为变量赋值
-    log_format  kvPairs $access_log;            # 定义特殊的日志格式
+    js_import   scripts/logging.js;                 # 从这里加载 js 代码
+    js_set      $access_log logging.loggingJson;    # 用 js 方法为变量赋值
+    log_format  json $access_log;                   # 定义特殊的日志格式
 
     server {
         listen 80;
-        root /usr/share/nginx/html;
-        access_log /var/log/nginx/access.log kvPairs;
+        access_log /var/log/nginx/access_json.log json;
+        return 200 'hello NJS\n';
     }
 }
 ```
 
-可以见到，NGINX JavaScript 代码并不内嵌在配置语法内。相反，我们使用 [js_import](https://nginx.org/en/docs/http/ngx_http_js_module.html#js_import) 指令来导入包含了所有 JavaScript 代码的文件。[js_set](https://nginx.org/en/docs/http/ngx_http_js_module.html#js_set) 指令定义了一个新的 NGINX 变量 `$access_log`，后面是为变量赋值的 JavaScript 函数。[log_format](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) 指令定义了一种名为 kvPairs 的新格式，它能够将 `$access_log` 的值写入每个日志行。
+可以见到，NGINX JavaScript 代码并不内嵌在配置语法内。相反，我们使用 [js_import](https://nginx.org/en/docs/http/ngx_http_js_module.html#js_import) 指令来导入包含了所有 JavaScript 代码的文件。[js_set](https://nginx.org/en/docs/http/ngx_http_js_module.html#js_set) 指令定义了一个新的 NGINX 变量 `$access_log`，后面是为变量赋值的 JavaScript 函数。[log_format](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) 指令定义了一种名为 json 的新格式，它能够将 `$access_log` 的值写入每个日志行。
 
-[server](https://nginx.org/en/docs/http/ngx_http_core_module.html#server) 块定义了一个简单的 HTTP 服务器，监听 80 端口，指定根目录。
-[access_log](https://nginx.org/en/docs/http/ngx_http_log_module.html#access_log) 指令指定了所有请求均采用 kvPairs 格式进行记录。
+[server](https://nginx.org/en/docs/http/ngx_http_core_module.html#server) 块定义了一个简单的 HTTP 服务器，监听 80 端口。
+[access_log](https://nginx.org/en/docs/http/ngx_http_log_module.html#access_log) 指令指定了日志文件路径以及所有请求均采用 json 格式进行记录。
 
 现在，来看看日志处理的 JavaScript 代码。
 
 ```js
-function kvAccess(r) {
-    var log = `${r.variables.time_iso8601} client=${r.remoteAddress} method=${r.method} uri=${r.uri} status=${r.status}`;
-    r.rawHeadersIn.forEach(h => log += ` in.${h[0]}=${h[1]}`);
-    r.rawHeadersOut.forEach(h => log += ` out.${h[0]}=${h[1]}`);
-    return log
+function loggingJson(r) {
+    var log = {};
+    var indexes = [
+        'remote_addr', 'remote_user', 
+        'time_local', 'request', 
+        'status', 'body_bytes_sent',
+        'http_referer', 'http_user_agent'
+    ];
+    for(var n in indexes) {
+        var key = indexes[n];
+        log[key] = r.variables[key];
+    }
+
+    var headerTypes = ['headersIn', 'headersOut'];
+    for (var m in headerTypes) {
+        var type = headerTypes[m];
+        log[type] = {};
+        var headers = r[type];
+        for (var n in headers) {
+            log[type][n] = headers[n];
+        }
+    }
+
+    var logStr = JSON.stringify(log);
+
+    while(logStr.indexOf('"') != -1) {
+        logStr = logStr.replace('"', "'");
+    }
+    return logStr;
 }
 
-export default { kvAccess }
+export default { loggingJson }
 ```
 
-NGINX 变量只有在被需要的时候才会进行求值计算，这意味着 js_set 定义的 JavaScript 函数只在需要该变量的值时才执行。在此示例中，由于 $access_log_headers 被用于 [log_format](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) 指令，因此 kvAccess() 在日志记录时执行。
+NGINX 变量只有在被需要的时候才会进行求值计算，这意味着 js_set 定义的 JavaScript 函数只在需要该变量的值时才执行。在此示例中，由于 $access_log 被用于 [log_format](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) 指令，因此 json() 在日志记录时执行。
 
-以下是本示例的真实日志，其中包括请求的基本信息、带有 **in.** 前缀的请求头以及带有 **out.** 前缀的响应头。
+以下是本示例的真实日志:
 
 ```bash
-curl http://127.0.0.1/
-2022-10-19T12:25:32+00:00 client=172.17.0.1 method=GET uri=/index.html status=200 in.Host=127.0.0.1 in.User-Agent=curl/7.79.1 in.Accept=*/* out.ETag=\x22634fec1f-117\x22 out.Accept-Ranges=bytes
+$ tail -1 /var/log/nginx/access_json.log
+
+{'remote_addr':'172.27.0.1','time_local':'28/Oct/2022:03:31:20 +0000','request':'GET / HTTP/1.1','status':'200','body_bytes_sent':'10','http_user_agent':'curl/7.79.1','headersIn':{'Host':'localhost:8095','User-Agent':'curl/7.79.1','Accept':'*/*'},'headersOut':{'Content-Type':'text/plain','Content-Length':'10'}}
 ```
 
-## 总结
+其实如果是正常的日志没必要做这么详细的记录，我们还可以实现仅在遇到错误时再生成这样的数据，记录到单独的日志文件中，方便我们进行故障排除。不过那就需要更多额外的 nginx 配置，这里就不展开了。
+
+## 结语
+
+在 njs 之前，Nginx+Lua 生态虽然已经十分成熟，但 Nginx 毕竟是一个 Web 服务器，JavaScript 作为 Web 开发的最流行的语言，用 JavaScript 生态来扩展 Nginx 的功能，可能会做出更多具有想象力的事情。
 
 ## 相关链接
 
