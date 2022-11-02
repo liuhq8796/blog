@@ -183,5 +183,9 @@
   "NGINX 入门实战": {
     "type": 0,
     "title": "NGINX 入门实战"
+  },
+  "【最佳实践】CSS 解决当img为空时出现图裂的问题": {
+    "type": 2,
+    "title": "CSS 解决当img为空时出现图裂的问题"
   }
 }
