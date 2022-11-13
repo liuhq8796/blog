@@ -187,5 +187,9 @@
   "【最佳实践】CSS 解决当img为空时出现图裂的问题": {
     "type": 2,
     "title": "CSS 解决当img为空时出现图裂的问题"
+  },
+  "Web 服务器配置中的 NGINX JavaScript": {
+    "type": 0,
+    "title": "Web 服务器配置中的 NGINX JavaScript"
   }
 }
