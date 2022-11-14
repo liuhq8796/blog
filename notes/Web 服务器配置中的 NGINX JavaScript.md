@@ -5,10 +5,10 @@ NJS 的目标是成为一个通用的 nginx 脚本框架，正如它的名字是
 - nginx 脚本化配置的历史
 - NJS 的设计目标
 - NJS 解释器实现方式
-- 在 nginx 中使用 NJS 的示例
-- NJS 目前可用的功能以及未来的计划
+- NJS 可用的功能
+- 在 nginx 中使用 NJS
 
-介绍下本文大纲，第一部分将谈论 nginx 脚本化配置的历史；第二章将是关于 NJS 的目标是什么，它要解决什么以及它不想解决什么；下一张将要谈论 NJS 解决这些问题的方式以及它的实现方式；下一章将展示如何在 nginx 中使用 NJS 的示例；最后再来谈谈 NJS 目前可用的功能以及未来的计划。
+介绍下本文大纲，第一部分将谈论 nginx 脚本化配置的历史；第二章将是关于 NJS 的目标是什么，它要解决什么以及它不想解决什么；下一张将要谈论 NJS 解决这些问题的方式以及它的实现方式；下一章将展示 NJS 目前可用的功能；最后再来展示一下如何在 nginx 中使用 NJS 的示例。
 
 好了，大纲已经介绍完了，那么我们从 nginx 脚本化配置的历史开始。
 
@@ -165,6 +165,42 @@ JavaScript 的第一个大优点是 JavaScript 是一种现代化的通用语言
 
 只关于以三维脚本规范的一致性。它是关于现代和高级代理的编写方式，因此他们确认我们是。定的。我脚本规范。对我们来说优先级比较低，因为这是一项巨大的工作要做而且该规范的一些怪癖，不允许我们进行一些额外的优化。这就是为什么最终我们准备好看的。 -->
 
+## NJS 可用的功能
+
+### 目前可用的功能
+
+- Boolean, Number, String, Object, Array, Function, Regexp, JOSN, Math, Promise
+- exceptions 异常
+- 闭包和箭头函数
+- let (0.6.0), const (0.6.0), async (0.7.0), await (0.7.0)
+- 加密、文件操作等等
+
+https://nginx.org/en/docs/njs/compatibility.html
+
+最后一章要讨论的是 NJS 目前可用的东西。
+
+要提到的第1件事是 JavaScript 中所有的原生对象都符合 ECMAScript 5.1规范，例如 Boolean, Number, String, Object, Array 等等
+
+第二点是关于异常的，你可以以通常的方式抛出它们，catch 捕获他们。
+
+你可以使用闭包和箭头函数，这些当然都是支持的，还有刚支持不久的一些 ES6 语法，例如 let/const、async/await
+
+另外，你还可能会用到加密模块和fs文件系统模块，例如计算哈希值或者想要读取和写入文件
+
+当然，还有一下是目前 NJS 中不支持的
+
+下面是关于什么在 NJS 中不可用
+
+- eval()
+- 将 NJS 直接嵌入到 nginx 配置文件中
+- 兼容性文档中未提到的 API
+
+例如 eval() 操作不可用，因为性能和安全性的原因，nginx 团队并不打算实现它。
+
+而将 NJS 直接嵌入到 nginx 配置文件中这个功能仍在计划中还未实现。
+
+另外，在官方兼容性文档中没有提到的 API 均还未受到支持。其实如果时间再往前推两年，刚才提到的 let/const、async/await 也在不支持待实现的队伍中，而现在大部分你熟悉的 API 都已经实现了，所以这点不用太担心。
+
 ## 在 NGINX 中使用 NJS
 
 ### 安装
@@ -180,23 +216,39 @@ JavaScript 的第一个大优点是 JavaScript 是一种现代化的通用语言
         ```bash
         sudo yum install nginx-module-njs
         ```
-2. 在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中添加一个 load_module 指令，以启用该模块。本例面向 HTTP 和 TCP/UDP 流量加载 JavaScript 模块。
+2. 在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中添加一个 load_module 指令，以启用该模块。本例启用了 NJS 的 http 模块，另外还有 stream 模块用来控制 TCP/UDP 协议的流量。
     ```nginx
     load_module modules/ngx_http_js_module.so;
-    load_module modules/ngx_stream_js_module.so;
     ```
 3. 重新加载 NGINX，以便将 NGINX JavaScript 模块加载到运行实例中。
     ```bash
     sudo nginx -s reload
     ```
 
-终于我们要开始看 NJS 如何使用了，首先我们必须安装它，以安装njs预编译模块为例，需要nginx版本是 1.9.11 或更高版本，你要做的事很简单，就是使用apt-get安装 njs 模块，然后在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中添加一个 load_module 指令，以启用该模块。本例面向 HTTP 和 TCP/UDP 流量加载 JavaScript 模块。最后重新加载 NGINX，以便将 NGINX JavaScript 模块加载到运行实例中。
+终于我们要开始看 NJS 如何使用了，首先我们必须安装它，以安装njs预编译模块为例，需要nginx版本是 1.9.11 或更高版本，你要做的事很简单，就是使用apt-get安装 njs 模块，然后在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中使用 load_module 指令引入 njs 模块并允许我们在其余配置中使用 njs 指令。本例启用了 NJS 的 http 模块，另外还有 stream 模块用来控制 TCP/UDP 协议的流量。最后重新加载 NGINX，以便将 NGINX JavaScript 模块加载到运行实例中。
 
-如果您不想在开发机或本地进行安装，只是想简单查看 NJS 的运行情况。那么也可以使用docker容器配合下面链接中的例子来查看，这些链接中包含我们接下来会讲到的所有实例。
+如果您不想在开发机或本地进行安装，只是想简单查看 NJS 的运行情况。那么也可以使用docker容器配合下面链接中的例子来查看，这些链接中包含我们接下来会讲到的所有示例。
 
 https://github.com/nginx/njs-examples
 
 https://github.com/f5devcentral/nginx-njs-usecases
+
+这些示例中包含工作中可能需要的各个方面的功能，例如：
+
+- 授权
+  - 生成 JWT 令牌
+  - 根据请求正文内容授权请求
+- 代理
+  - 将多个子请求的结果异步合并到单个回复中
+  - 链式访问多个子请求
+- 修改响应
+  - 修改或删除上游服务器发送的 Cookie
+  - 将响应正文字符转换为小写
+- 记录
+  - 使用json格式记录日志
+  - 记录每个客户端的请求数
+
+等等。
 
 ### Hello World
 
@@ -212,13 +264,13 @@ https://github.com/f5devcentral/nginx-njs-usecases
 
 https://nginx.org/en/docs/njs/reference.html
 
-再看更复杂的例子之前，按照编程界的习惯，我们先来实现一个最简单的示例 hello world。
+那么在看更像上一页那些复杂的例子之前，按照编程界的惯例，我们先来实现一个最简单的示例 hello world。
 
-你要做的第1件事就是加载 njs 模块，然后使用 js_import 指令引入你编写的 http.js 文件，再使用js_content指令，引入 HTTP 文件中导出的 hello 方法。
+你要做的第1件事就是加载 njs 模块，然后我们使用第一个 NJS 指令 js_import，它的作用很简单，就是引入你编写的 js 文件，在这里就是引入了 http.js 文件；再使用第二个NJS 指令 js_content，它的作用也很简单，就是将这个特定位置的内容处理程序更改为 NJS 脚本，在这里就是指从 http.js 文件中导出的 hello 方法。
 
 最后再来看一看 http.js 文件，我们在这里编写名为 hello 的标准JavaScript函数，其参数通常被命名为r，代表 nginx 当前正在服务的请求。从官方文档中可以查看 r 有许多成员变量和方法可以用来操作请求。这里我们使用 return 方法，它和 nginx 本身的 return 非常相似，向用户返回200的状态码和文本 hello world。
 
-现在示例已经完成了，只剩下最后一步，启动 nginx 并 curl localhost，这样就可以看到刚刚 hello 方法所返回的 Hello World 了。
+现在示例已经完成了，只剩下最后一步，启动 nginx 并 curl http://localhost，这样就可以看到刚刚 hello 方法所返回的 Hello World 了。
 
 ### 子请求功能
 
@@ -264,53 +316,8 @@ export default {join};
 
 第二个示例将向您展示 NJS HTTP 模块的子请求方法的功能。在此示例中，我们将向该示例后端中的至少两个接口发出多个同步子请求。并且我们将收集他们的返回，将联合结果同步返回给客户端。
 
-从配置文件中我们可以看到，使用了 js_import 指令，将js文件导入并命名为 main。然后使用 js_content 指令将 main 对象中的 join 方法作为 join 接口的处理函数，这样看起来和 ES6 的模块导入方式是不是更像了。
+从配置文件中我们可以看到，我们使用了 js_import 指令将js文件导入，并使用了别名的功能将导入的模块命名为 main，我们可以在其余配置用别名来引用它。然后使用 js_content 指令将 main 对象中的 join 方法作为 join 接口的处理函数，这样看起来和 ES6 的模块导入方式是不是更像了。
 
 然后来看看 js 文件中的内容，我们在 join 方法中使用了一个发起子请求的辅助函数，该辅助函数需要一个请求对象和子请求列表。其内部通过 Promise.all 和 r 对象上的 subrequest 子请求方法并行执行多个子请求调用，在所有子请求完成后拼装所有返回内容，并将其序列化后返回给 join 请求。
 
 在这个示例中我们看到了两个熟悉的朋友，Promise 和 JSON 对象，他们都是 njs 解释器实现的全局对象，所以你可以在任意 njs 文件中使用他们。
-
-## NJS 目前可用的功能以及未来的计划
-
-### 目前可用的功能
-
-- Boolean, Number, String, Object, Array, Function, Regexp, JOSN, Math, Promise
-- exceptions 异常
-- 闭包和箭头函数
-- let (0.6.0), const (0.6.0), async (0.7.0), await (0.7.0)
-- 加密、文件操作等等
-
-https://nginx.org/en/docs/njs/compatibility.html
-
-最后一章要讨论的是 NJS 目前可用的东西。
-
-要提到的第1件事是 JavaScript 中所有的原生对象都符合 ECMAScript 5.1规范，例如 Boolean, Number, String, Object, Array 等等
-
-第二点是关于异常的，你可以以通常的方式抛出它们，catch 捕获他们。
-
-你可以使用闭包和箭头函数，这些当然都是支持的，还有刚支持不久的一些 ES6 语法，例如 let/const、async/await
-
-另外，你还可能会用到加密模块和fs文件系统模块，例如计算哈希值或者想要读取和写入文件
-
-下面是关于什么在 NJS 中不可用
-
-- eval()
-
-例如 eval() 操作不可用，因为性能和安全性的原因，nginx 团队并不打算实现它。
-
-其实再往前推两年，刚才提到的 let/const、async/await 也在这一列中，当时还属于待实现未完成的状态，而现在大部分你熟悉的 API 都已经实现了。
-
-### 未来的计划
-
-好的，在本此分享的最后，介绍一下 NJS 未来的目标是什么
-
-- 与 NGINX 的更多集成
-  - 将 NJS 直接嵌入到 nginx 配置文件中
-  - 扩展模块的功能集（已实现）
-- NJS 开发
-  - 扩展 ECMAScript 规范一致性
-  - 模块支持
-
-第一点是关于 nginx 本身的集成，例如直接将 NJS 添加到 nginx 配置文件里，这对于一些简单的用例是件好事情。还有就是扩展 modules 功能集。
-
-第二点是关于 njs 引擎本身的，
