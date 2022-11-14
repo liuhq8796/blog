@@ -2,7 +2,13 @@
 
 NJS 的目标是成为一个通用的 nginx 脚本框架，正如它的名字是 nginx 和 JavaScript 的混合词，NJS 结合了两者， 成为了一个从头编写了 JavaScript 解释器的 nginx 模块。
 
-介绍下本文大纲，第一部分将谈论 nginx 脚本化配置的历史；第二章将是关于项目目标，NJS 的目标是什么，它要解决什么以及它不想解决什么；下一张将要谈论 NJS 解决这些问题的方式以及它的实现方式；下一章将展示如何在 nginx 中使用 NJS 的示例；最后再来谈谈 NJS 未来的计划和所有可用的功能。
+- nginx 脚本化配置的历史
+- NJS 的设计目标
+- NJS 解释器实现方式
+- 在 nginx 中使用 NJS 的示例
+- NJS 目前可用的功能以及未来的计划
+
+介绍下本文大纲，第一部分将谈论 nginx 脚本化配置的历史；第二章将是关于 NJS 的目标是什么，它要解决什么以及它不想解决什么；下一张将要谈论 NJS 解决这些问题的方式以及它的实现方式；下一章将展示如何在 nginx 中使用 NJS 的示例；最后再来谈谈 NJS 目前可用的功能以及未来的计划。
 
 好了，大纲已经介绍完了，那么我们从 nginx 脚本化配置的历史开始。
 
@@ -56,7 +62,7 @@ perl 模块第一大优势是可以使用现有的 Perl 库，这对于脚本来
 
 好，我们完成了 nginx 脚本化配置历史的部分，现在来继续第二部分。NJS 的目标是什么，nginx 团队试图用 NJS 模块解决什么问题。
 
-NJS 的最终目的主要是减少 nginx 用户使用 C 语言编写新模块的必要性，毕竟开发 C 语言模块对新手甚至是有经验的开发人员来说也是一件困难的事情，尤其在时间紧张的时期更不值得这样去做。
+NJS 的最终目的主要是减少 nginx 用户使用 C 语言编写新模块的必要性，毕竟开发 C 语言模块对新手甚至是有经验的开发人员来说也是一件困难的事情，尤其在时间紧张的时期更不值得这样去做。同时，如果离开 nginx 创建一个单独的应用程序来满足你的需求，速度可能很慢且占用大量 CPU。
 
 所以再让我们更详细的看一下这些设计目标。
 
@@ -86,11 +92,11 @@ NJS 的最终目的主要是减少 nginx 用户使用 C 语言编写新模块的
 - 事件驱动对于 JavaScript 来说是很自然的
   - 与 nginx 运行时完美匹配
 
-JavaScript 的第一个大优点是 JavaScript 是一种现代通用语言，如果不是这一点，很可能就不会用 JavaScript 来扩展 nginx 了。
+JavaScript 的第一个大优点是 JavaScript 是一种现代化的通用语言，如果不是这一点，很可能就不会用 JavaScript 来扩展 nginx 了。
 
-第二个优点是，JavaScript 有类似 C 的语法，这对于许多开发人员和 DevOps 来说是非常熟悉的，另外，对于 JavaScript 来说额外的一大优点是 JavaScript 有花括号来标记块，所以它与 nginx 配置的编写方式很好的对齐，所以在未来 JavaScript 也许可以直接注入到 nginx 配置文件中，这样他将成为一个有用的特性。
+第二个优点是，JavaScript 有类似 C 的语法，这对于许多开发人员和 DevOps 来说是非常熟悉的。另外，对于 JavaScript 来说额外的一大优点是 JavaScript 有花括号来标记块，所以它与 nginx 配置的编写方式是很匹配的，所以在未来 JavaScript 也许可以直接注入到 nginx 配置文件中，这可能会成为一个很有用的特性。
 
-最后一点要提到的是 JavaScript 是为浏览器编写的，所以事件驱动对于 JavaScript 来说是很自然的，它内置于 JavaScript 中，因此该特性与 nginx 运行时完美匹配，因为 nginx 本身也是关于事件循环、回调以及类似的东西。
+最后一点要提到的是 JavaScript 是为浏览器编写的，所以事件驱动对于 JavaScript 来说是很自然的，它内置于 JavaScript 中，因此该特性与 nginx 运行时完美匹配，因为 nginx 本身也是与事件循环、回调以及类似的东西相关的。
 
 ### 为什么要自己实现解释器
 
@@ -114,12 +120,197 @@ JavaScript 的第一个大优点是 JavaScript 是一种现代通用语言，如
 
 这是每秒创建上下文的数量对比，截图来自2018年 nginx 团队的分享，你可以看到 NJS 创建上下文的速度至少比其他引擎快了两个个数量级。
 
-原因很简单，不是什么魔法，只是 NJS 被设计为针对上下文创建时间进行了优化。对于 V8 和 SpiderMonkey 这样的浏览器引擎来说，引入一些延迟来处理 JavaScript 代码例如运行JIT编译器是完全可以接受的，但对于运行在服务器端的 NJS 来说情况完全不同，对于一个给定的请求路径，他所要运行的代码是相同的，因此可以预编译代码，可以剥离任何不需要的功能，可以优化上下文创建时间，这就是为什么我们看到这样的数字。
+原因很简单，只是 NJS 被设计为针对上下文创建时间进行了优化。对于 V8 和 SpiderMonkey 这样的浏览器引擎来说，引入一些延迟来处理 JavaScript 代码例如运行JIT编译器是完全可以接受的，但对于运行在服务器端的 NJS 来说情况完全不同，对于一个给定的请求路径，他所要运行的代码是相同的，因此可以预编译代码，可以剥离任何不需要的功能，可以优化上下文创建时间，这就是为什么我们看到这样的数字。
 
 ## NJS interpreter
 
 那么接下来就将展示 NJS 如何实现前面描述的目标。
 
-## Using NJS in nginx
+### 为什么 NJS 这么快
 
-## Plans for the future and available functionality
+**NGINX modules**
+
+- 在启动时进行字节码编译
+- 为每个请求克隆一份已编译的虚拟机
+  - 快速创建和销毁虚拟机
+- 没有 JIT 编译
+
+<!-- 第一点是在 nginx 开始运行时，NJS 代码就会被编译成字节码，而不是像浏览器引擎一样一边解释一边执行，因此速度上有很大提升。
+
+我想提一下复制和写入的含义是正确的。他以为这曾经是一个孩子和最近的实例，更改了全局对象。该更改仅对特定请求可见，因此这意味着我们共享大量不可变代码的很大一部分。减少CPU和内存开销。 
+
+最后我想提的一点是我们jit两个原因，第1个原因是关于可以置信。飘逸变异。如果你可以编译代码，那么你可以运行它，而对于GT变异情况并非如此。那个原因是 Git引擎在NG x环境中并没有给你带来很多性能优势。因为大多数你是在 n这个词本身内部没有大量计算而不是受到x本身的限制，而是引擎和NG是本身受到通常你的限制。我调用几个本身的外部IP，你会受到他的限制。 -->
+
+**解释器**
+
+- 基于注册的虚拟机
+  - 内存占用小
+- UTF8 字符串、字节字符串优化
+  - ECMAScript 规范要求 UTF-16 
+- 禁用垃圾回收
+  - 而是立即销毁克隆的虚拟机
+
+<!-- 是关于NG x解释器的实现方式。这是基于寄存器的虚拟机机器，并根据基于堆栈的虚拟机的比较，我们在那里注册基于虚拟机的内存占用量较小。典型的。那是小势力，你在那里大约有几千自己的内存。第2点是根据以下买一条本规范。应该使用tf16编码处理字符串，但显然这不是。你想挤出性能，这不是一个好主意，因为您必须为任何过失数据块分配至少两倍以上的资金。因此按键是使用由tf8字符串。能够显著减少CPU中的内存。提到的一点是关于垃圾收集的操作开销，因为你们中大多数人都知道现代语言，高级语言，例如Java JavaScript，他们采用某种形式的垃圾收集算法。必须处理的特殊过程，手机不再使用的数据，但该进程本身引用技术的进程和垃圾收集器的进程停止，它们引入可测量的开销和测量的延迟而不是NG4岁适合本身的不同策略。
+
+大多数NG模块都是编写的。 NDS从内存池中分配内存，该内存此时链接到当前请求。数据请求完成，NG.克隆的虚拟机会被整体销毁。为该NG实例的操作非常便宜。显然他对于短期请求非常有效。会为长期存在的请求引入过多的内存消耗。而我们计划引入可选的垃圾手机引擎。来应对此类任务。 -->
+
+### NJS 不会做的事
+
+- nginx + NJS 不是应用程序服务器
+  - 不是“Node.js”的替代品
+- 严格的 ECMAScript 规范一致性（进行中）
+  - 大量的工作要做，优先级不高
+
+<!-- 那最后我想再次重申，我们是尝试做什么和我们不想做的事情。所以第1点是NG s和n级s不是。用程序服务器。所以我们不会替换note gs。例如note gs就很好，这绝对是我们想要的。要做的事。在NG x本身内部添加额外的脚本功能。我要扩展，这个是引擎配置，将它们设置为两个以使用使它们更灵活而不是。替换note gs。
+
+只关于以三维脚本规范的一致性。它是关于现代和高级代理的编写方式，因此他们确认我们是。定的。我脚本规范。对我们来说优先级比较低，因为这是一项巨大的工作要做而且该规范的一些怪癖，不允许我们进行一些额外的优化。这就是为什么最终我们准备好看的。 -->
+
+## 在 NGINX 中使用 NJS
+
+### 安装
+
+以安装njs预编译模块为例，需要nginx版本是 1.9.11 或更高版本
+
+1. 安装预构建包。
+    - Ubuntu 和 Debian 系统：
+        ```bash
+        sudo apt-get install nginx-module-njs
+        ```
+    - RedHat、CentOS 和 Oracle Linux 系统：
+        ```bash
+        sudo yum install nginx-module-njs
+        ```
+2. 在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中添加一个 load_module 指令，以启用该模块。本例面向 HTTP 和 TCP/UDP 流量加载 JavaScript 模块。
+    ```nginx
+    load_module modules/ngx_http_js_module.so;
+    load_module modules/ngx_stream_js_module.so;
+    ```
+3. 重新加载 NGINX，以便将 NGINX JavaScript 模块加载到运行实例中。
+    ```bash
+    sudo nginx -s reload
+    ```
+
+终于我们要开始看 NJS 如何使用了，首先我们必须安装它，以安装njs预编译模块为例，需要nginx版本是 1.9.11 或更高版本，你要做的事很简单，就是使用apt-get安装 njs 模块，然后在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中添加一个 load_module 指令，以启用该模块。本例面向 HTTP 和 TCP/UDP 流量加载 JavaScript 模块。最后重新加载 NGINX，以便将 NGINX JavaScript 模块加载到运行实例中。
+
+如果您不想在开发机或本地进行安装，只是想简单查看 NJS 的运行情况。那么也可以使用docker容器配合下面链接中的例子来查看，这些链接中包含我们接下来会讲到的所有实例。
+
+https://github.com/nginx/njs-examples
+
+https://github.com/f5devcentral/nginx-njs-usecases
+
+### Hello World
+
+![Hello World](../imgs/njs-demo.png)
+
+1. 启用 njs 模块
+
+2. 使用 js_import 引用 http.js 文件
+   
+3. 使用 js_content 引用 http.js 文件中导出的 hello 方法
+   
+4. 定义并导出 hello 方法
+
+https://nginx.org/en/docs/njs/reference.html
+
+再看更复杂的例子之前，按照编程界的习惯，我们先来实现一个最简单的示例 hello world。
+
+你要做的第1件事就是加载 njs 模块，然后使用 js_import 指令引入你编写的 http.js 文件，再使用js_content指令，引入 HTTP 文件中导出的 hello 方法。
+
+最后再来看一看 http.js 文件，我们在这里编写名为 hello 的标准JavaScript函数，其参数通常被命名为r，代表 nginx 当前正在服务的请求。从官方文档中可以查看 r 有许多成员变量和方法可以用来操作请求。这里我们使用 return 方法，它和 nginx 本身的 return 非常相似，向用户返回200的状态码和文本 hello world。
+
+现在示例已经完成了，只剩下最后一步，启动 nginx 并 curl localhost，这样就可以看到刚刚 hello 方法所返回的 Hello World 了。
+
+### 子请求功能
+
+```nginx
+# nginx.conf
+
+js_import main from http/join_subrequests.js;
+
+location /join {
+    js_content main.join;
+}
+
+location /foo {
+    proxy_pass http://backend1;
+}
+
+location /bar {
+    proxy_pass http://backend2;
+}
+```
+
+```js
+// example.js
+
+async function join(r) {
+    join_subrequests(r, ['/foo', '/bar']);
+}
+
+async function join_subrequests(r, subs) {
+    let results = await Promise.all(subs.map(uri => r.subrequest(uri)));
+
+    let response = results.map(reply => ({
+        uri:  reply.uri,
+        code: reply.status,
+        body: reply.responseBody,
+    }));
+
+    r.return(200, JSON.stringify(response));
+}
+
+export default {join};
+```
+
+第二个示例将向您展示 NJS HTTP 模块的子请求方法的功能。在此示例中，我们将向该示例后端中的至少两个接口发出多个同步子请求。并且我们将收集他们的返回，将联合结果同步返回给客户端。
+
+从配置文件中我们可以看到，使用了 js_import 指令，将js文件导入并命名为 main。然后使用 js_content 指令将 main 对象中的 join 方法作为 join 接口的处理函数，这样看起来和 ES6 的模块导入方式是不是更像了。
+
+然后来看看 js 文件中的内容，我们在 join 方法中使用了一个发起子请求的辅助函数，该辅助函数需要一个请求对象和子请求列表。其内部通过 Promise.all 和 r 对象上的 subrequest 子请求方法并行执行多个子请求调用，在所有子请求完成后拼装所有返回内容，并将其序列化后返回给 join 请求。
+
+在这个示例中我们看到了两个熟悉的朋友，Promise 和 JSON 对象，他们都是 njs 解释器实现的全局对象，所以你可以在任意 njs 文件中使用他们。
+
+## NJS 目前可用的功能以及未来的计划
+
+### 目前可用的功能
+
+- Boolean, Number, String, Object, Array, Function, Regexp, JOSN, Math, Promise
+- exceptions 异常
+- 闭包和箭头函数
+- let (0.6.0), const (0.6.0), async (0.7.0), await (0.7.0)
+- 加密、文件操作等等
+
+https://nginx.org/en/docs/njs/compatibility.html
+
+最后一章要讨论的是 NJS 目前可用的东西。
+
+要提到的第1件事是 JavaScript 中所有的原生对象都符合 ECMAScript 5.1规范，例如 Boolean, Number, String, Object, Array 等等
+
+第二点是关于异常的，你可以以通常的方式抛出它们，catch 捕获他们。
+
+你可以使用闭包和箭头函数，这些当然都是支持的，还有刚支持不久的一些 ES6 语法，例如 let/const、async/await
+
+另外，你还可能会用到加密模块和fs文件系统模块，例如计算哈希值或者想要读取和写入文件
+
+下面是关于什么在 NJS 中不可用
+
+- eval()
+
+例如 eval() 操作不可用，因为性能和安全性的原因，nginx 团队并不打算实现它。
+
+其实再往前推两年，刚才提到的 let/const、async/await 也在这一列中，当时还属于待实现未完成的状态，而现在大部分你熟悉的 API 都已经实现了。
+
+### 未来的计划
+
+好的，在本此分享的最后，介绍一下 NJS 未来的目标是什么
+
+- 与 NGINX 的更多集成
+  - 将 NJS 直接嵌入到 nginx 配置文件中
+  - 扩展模块的功能集（已实现）
+- NJS 开发
+  - 扩展 ECMAScript 规范一致性
+  - 模块支持
+
+第一点是关于 nginx 本身的集成，例如直接将 NJS 添加到 nginx 配置文件里，这对于一些简单的用例是件好事情。还有就是扩展 modules 功能集。
+
+第二点是关于 njs 引擎本身的，
