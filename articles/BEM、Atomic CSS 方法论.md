@@ -35,7 +35,7 @@
 
 <!-- component -->
 <div class="card">
-  <img src="..." class="card-img-top" alt="...">
+  <img src="..." class="card-img-top" alt="..." />
   <div class="card-body">
     <h5 class="card-title">Card title</h5>
     <p class="card-text">Card's content.</p>
@@ -85,7 +85,7 @@ BEM 即为块级(Block)、元素(Element)、修饰符(Modifier)的缩写，它�
 - Element：使用 `__` 两个下换线来连接 Block 对象，例如 `.el-form-item__label`、`.van-button__content` 等等。
 - Modifier：使用 `--` 两个中横杠来连接 Block 或 Element 对象，例如 `.el-form-item--mini`、`.van-button--primary` 等等。
 
-![BEM](../imgs/BEM%E3%80%81Atomic%20CSS%20%E6%96%B9%E6%B3%95%E8%AE%BA.png)
+![BEM](../images/BEM%E3%80%81Atomic%20CSS%20%E6%96%B9%E6%B3%95%E8%AE%BA.png)
 
 #### BEM 命名法的优势
 
@@ -107,23 +107,23 @@ BEM 的好处是，可以从 HTML 代码中很明显的看到其关联性，获�
 </template>
 
 <style>
-.card {
-  // 卡片样式
-}
-.header {
-  // 头部样式
-}
-.content {
-  // 内容样式
-}
-.button-primary {
-  // 按钮基础样式
-  // primary 样式
-}
-.button-loading {
-  // 按钮基础样式
-  // loading 样式
-}
+  .card {
+    // 卡片样式
+  }
+  .header {
+    // 头部样式
+  }
+  .content {
+    // 内容样式
+  }
+  .button-primary {
+    // 按钮基础样式
+    // primary 样式
+  }
+  .button-loading {
+    // 按钮基础样式
+    // loading 样式
+  }
 </style>
 ```
 
@@ -145,24 +145,24 @@ BEM 的好处是，可以从 HTML 代码中很明显的看到其关联性，获�
 </template>
 
 <style>
-.card {
-  // 卡片样式
-}
-.card__header {
-  // 卡片顶部样式
-}
-.card__content {
-  // 卡片内容样式
-}
-.button {
-  // 按钮基础样式
-}
-.button--primary {
-  // primary 样式
-}
-.button--loading {
-  // loading 样式
-}
+  .card {
+    // 卡片样式
+  }
+  .card__header {
+    // 卡片顶部样式
+  }
+  .card__content {
+    // 卡片内容样式
+  }
+  .button {
+    // 按钮基础样式
+  }
+  .button--primary {
+    // primary 样式
+  }
+  .button--loading {
+    // loading 样式
+  }
 </style>
 ```
 
@@ -251,7 +251,7 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 <div class="semantic-css">
   <div class="chat-notification">
     <div class="chat-notification-logo-wrapper">
-      <img class="chat-notification-logo" src="../imgs/BEM、Atomic CSS 方法论(1).svg" alt="ChitChat Logo">
+      <img class="chat-notification-logo" src="../images/BEM、Atomic CSS 方法论(1).svg" alt="ChitChat Logo">
     </div>
     <div class="chat-notification-content">
       <h4 class="chat-notification-title">ChitChat</h4>
@@ -349,9 +349,11 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 而使用原子化 CSS 框架 Tailwind CSS 的话就可以改造成下面这样：
 
 ```html
-<div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4">
+<div
+  class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4"
+>
   <div class="shrink-0">
-    <img class="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo">
+    <img class="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo" />
   </div>
   <div>
     <div class="text-xl font-medium text-black">ChitChat</div>
@@ -371,9 +373,9 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
 - 使用 **width** 和 **height** 功能类(`w-12`, `h-12`)来设置 logo 图片的大小
 - 使用 **font size**, **text color**, 和 **font-weight** 功能类(`text-xl`, `text-black`, `font-medium` 等等)给卡片文字设置样式
 
-像这样将 css 属性拆分成小巧单一的class，不仅解决了命名麻烦的问题，同时还解决了难以复用和css文件大小膨胀的问题。
+像这样将 css 属性拆分成小巧单一的 class，不仅解决了命名麻烦的问题，同时还解决了难以复用和 css 文件大小膨胀的问题。
 
-即使是另一个完全不同的组件，作为全局样式这些 class 依然是可以复用的。而因为你用的一直是同一份全局 css，你就不会再有或很少有新的独立样式生成，长此以往就能够大大减小项目里css文件的大小。
+即使是另一个完全不同的组件，作为全局样式这些 class 依然是可以复用的。而因为你用的一直是同一份全局 css，你就不会再有或很少有新的独立样式生成，长此以往就能够大大减小项目里 css 文件的大小。
 
 当然，即使是不使用类似的框架，我们按自己的规则定义一套通用的样式的话，这些优势也依然存在。
 
@@ -390,8 +392,10 @@ Atomic CSS 也不是不存在缺点，作为一个正在发展方法论还是存
   作为一个开发者，我想谁也不会愿意在自己的代码里到处复制和维护这样的一个 button：
 
   ```html
-  <button class="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
-  Click me
+  <button
+    class="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+  >
+    Click me
   </button>
   ```
 

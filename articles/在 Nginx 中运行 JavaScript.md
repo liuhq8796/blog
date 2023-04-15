@@ -12,15 +12,15 @@
 
 C-Modules、Perl、Lua、JavaScript
 
-![nginx-modules](../imgs/nginx-modules.png)
+![nginx-modules](../images/nginx-modules.png)
 
 ### NJS 核心价值
 
 使用脚本的方式扩展应用服务能力
 
-- 减少开发投入：减少用户独立使用C语言开发特定场景的nginx模块的可能性。
-- 降低使用难度：将JavaScript代码集成到nginx HTTP和流（TCP/UDP）模块的事件处理模型中。
-- 提高产出效率：使用JavaScript代码扩展nginx配置语法，以实现复杂的配置解决方案。
+- 减少开发投入：减少用户独立使用 C 语言开发特定场景的 nginx 模块的可能性。
+- 降低使用难度：将 JavaScript 代码集成到 nginx HTTP 和流（TCP/UDP）模块的事件处理模型中。
+- 提高产出效率：使用 JavaScript 代码扩展 nginx 配置语法，以实现复杂的配置解决方案。
 
 ### NJS 与 Node.js、JavaScript 的区别
 
@@ -36,30 +36,30 @@ JavaScript 的规范由 ECMAScript 标准定义。NGINX JavaScript 遵循 ECMASc
 
 ### 安装 NJS 模块
 
-以安装njs预编译模块为例，需要nginx版本是 1.9.11 或更高版本
+以安装 njs 预编译模块为例，需要 nginx 版本是 1.9.11 或更高版本
 
 1. 安装预构建包。
-    - Ubuntu 和 Debian 系统：
-        ```bash
-        sudo apt-get install nginx-module-njs
-        ```
-    - RedHat、CentOS 和 Oracle Linux 系统：
-        ```bash
-        sudo yum install nginx-module-njs
-        ```
+   - Ubuntu 和 Debian 系统：
+     ```bash
+     sudo apt-get install nginx-module-njs
+     ```
+   - RedHat、CentOS 和 Oracle Linux 系统：
+     ```bash
+     sudo yum install nginx-module-njs
+     ```
 2. 在 nginx.conf 配置文件的顶层（“main”）上下文（而非 http 或 stream 上下文）中添加一个 load_module 指令，以启用该模块。本例面向 HTTP 和 TCP/UDP 流量加载 JavaScript 模块。
-    ```nginx
-    load_module modules/ngx_http_js_module.so;
-    load_module modules/ngx_stream_js_module.so;
-    ```
+   ```nginx
+   load_module modules/ngx_http_js_module.so;
+   load_module modules/ngx_stream_js_module.so;
+   ```
 3. 重新加载 NGINX，以便将 NGINX JavaScript 模块加载到运行实例中。
-    ```bash
-    sudo nginx -s reload
-    ```
+   ```bash
+   sudo nginx -s reload
+   ```
 
 ### NJS 基本使用入门
 
-![njs-demo](../imgs/njs-demo.png)
+![njs-demo](../images/njs-demo.png)
 
 1. 启用 njs 模块
 2. 使用 js_import 引用 http.js 文件
@@ -70,16 +70,17 @@ JavaScript 的规范由 ECMAScript 标准定义。NGINX JavaScript 遵循 ECMASc
 
 ```js
 // 初始化连接
-ngx.fetch('http://nginx.org/en/docs/njs')
+ngx
+  .fetch("http://nginx.org/en/docs/njs")
 
-// 当url返回时
-.then(reply => reply.text())
+  // 当url返回时
+  .then((reply) => reply.text())
 
-// 当正文读取完成时
-.then(body => r.return(200, body.toString()))
+  // 当正文读取完成时
+  .then((body) => r.return(200, body.toString()))
 
-// 如果出现了问题，就执行这里
-.catch(e => r.return(501, e.message))
+  // 如果出现了问题，就执行这里
+  .catch((e) => r.return(501, e.message));
 ```
 
 ## NJS 的用例
@@ -96,11 +97,11 @@ ngx.fetch('http://nginx.org/en/docs/njs')
   - 修改或删除上游服务器发送的 Cookie
   - 将响应正文字符转换为小写
 - 记录
-  - 使用json格式记录日志
+  - 使用 json 格式记录日志
   - 记录每个客户端的请求数
 - ......
 
-### 真实案例 - 使用json格式记录日志
+### 真实案例 - 使用 json 格式记录日志
 
 默认情况下 Nginx 打印出的日志是包含各种字段值的字符串，就像下面这样：
 
@@ -114,7 +115,7 @@ ngx.fetch('http://nginx.org/en/docs/njs')
 - 条目可能很长，让人难以阅读
 - 无法记录存在不确定性的值，例如“所有请求头”
 
-我们可以通过使用 NGINX JavaScript 模块（njs）以结构化格式（如JSON）编写日志条目来解决这些问题。
+我们可以通过使用 NGINX JavaScript 模块（njs）以结构化格式（如 JSON）编写日志条目来解决这些问题。
 
 此示例的 NGINX 配置非常简单。
 
@@ -142,37 +143,41 @@ http {
 
 ```js
 function loggingJson(r) {
-    var log = {};
-    var indexes = [
-        'remote_addr', 'remote_user', 
-        'time_local', 'request', 
-        'status', 'body_bytes_sent',
-        'http_referer', 'http_user_agent'
-    ];
-    for(var n in indexes) {
-        var key = indexes[n];
-        log[key] = r.variables[key];
-    }
+  var log = {};
+  var indexes = [
+    "remote_addr",
+    "remote_user",
+    "time_local",
+    "request",
+    "status",
+    "body_bytes_sent",
+    "http_referer",
+    "http_user_agent",
+  ];
+  for (var n in indexes) {
+    var key = indexes[n];
+    log[key] = r.variables[key];
+  }
 
-    var headerTypes = ['headersIn', 'headersOut'];
-    for (var m in headerTypes) {
-        var type = headerTypes[m];
-        log[type] = {};
-        var headers = r[type];
-        for (var n in headers) {
-            log[type][n] = headers[n];
-        }
+  var headerTypes = ["headersIn", "headersOut"];
+  for (var m in headerTypes) {
+    var type = headerTypes[m];
+    log[type] = {};
+    var headers = r[type];
+    for (var n in headers) {
+      log[type][n] = headers[n];
     }
+  }
 
-    var logStr = JSON.stringify(log);
+  var logStr = JSON.stringify(log);
 
-    while(logStr.indexOf('"') != -1) {
-        logStr = logStr.replace('"', "'");
-    }
-    return logStr;
+  while (logStr.indexOf('"') != -1) {
+    logStr = logStr.replace('"', "'");
+  }
+  return logStr;
 }
 
-export default { loggingJson }
+export default { loggingJson };
 ```
 
 NGINX 变量只有在被需要的时候才会进行求值计算，这意味着 js_set 定义的 JavaScript 函数只在需要该变量的值时才执行。在此示例中，由于 $access_log 被用于 [log_format](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) 指令，因此 json() 在日志记录时执行。
@@ -193,7 +198,7 @@ $ tail -1 /var/log/nginx/access_json.log
 
 ## 相关链接
 
-NJS文档：
+NJS 文档：
 
 http://nginx.org/en/docs/njs/
 
