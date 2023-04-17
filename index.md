@@ -3,22 +3,15 @@
 layout: home
 
 hero:
-  name: "LucasLiu's blog site"
-  text: "LucasLiu's blog site"
-  tagline: My great project tagline
-  actions:
-    - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
+  name: 学海拾贝
+  text: LucasLiu's 博客
+  tagline: 记录我的学习笔记
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: HTML
+    link: /articles/html/
+  - title: CSS
+    link: /articles/css/
+  - title: JS
+    link: /articles/js/
 ---
