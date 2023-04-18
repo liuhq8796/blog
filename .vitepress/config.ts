@@ -16,7 +16,7 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'HTML',
+        text: 'JS',
         items: [],
       },
       {
@@ -29,8 +29,21 @@ export default defineConfig({
         ],
       },
       {
-        text: 'JS',
+        text: 'HTML',
         items: [],
+      },
+      {
+        text: 'Nginx',
+        items: [
+          {
+            text: '在 Nginx 中运行 JavaScript',
+            link: '/articles/nginx/在 Nginx 中运行 JavaScript',
+          },
+          {
+            text: 'Web 服务器配置中的 NGINX JavaScript',
+            link: '/articles/nginx/Web 服务器配置中的 NGINX JavaScript',
+          },
+        ],
       },
     ],
 
