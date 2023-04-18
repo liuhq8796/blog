@@ -12,7 +12,7 @@ export default defineConfig({
       { text: '全部文章', link: '/articles/' },
     ],
 
-    outlineTitle: '目录',
+    outlineTitle: '页面导航',
 
     sidebar: [
       {
@@ -36,6 +36,10 @@ export default defineConfig({
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/liuhq8796/blog' }],
 
-    returnToTopLabel: '返回顶部',
+    darkModeSwitchLabel: '深色模式',
+
+    sidebarMenuLabel: '目录',
+
+    returnToTopLabel: '回到顶部',
   },
 })
