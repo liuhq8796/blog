@@ -5,6 +5,7 @@ export default defineConfig({
   title: '学海拾贝',
   titleTemplate: "LucasLiu's 博客网站",
   description: "LucasLiu's 博客网站",
+  lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
