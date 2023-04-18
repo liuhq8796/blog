@@ -8,10 +8,12 @@ hero:
   tagline: 记录我的学习笔记
 
 features:
-  - title: HTML
-    link: /articles/html/
-  - title: CSS
-    link: /articles/css/
   - title: JS
     link: /articles/js/
+  - title: CSS
+    link: /articles/css/
+  - title: HTML
+    link: /articles/html/
+  - title: Nginx
+    link: /articles/nginx/
 ---
