@@ -12,7 +12,7 @@
 
 C-Modules、Perl、Lua、JavaScript
 
-![nginx-modules](./images/%E5%9C%A8%20Nginx%20%E4%B8%AD%E8%BF%90%E8%A1%8C%20JavaScript/nginx-modules.png)
+![nginx-modules](./images/running-javascript-in-nginx/nginx-modules.png)
 
 ### NJS 核心价值
 
@@ -59,7 +59,7 @@ JavaScript 的规范由 ECMAScript 标准定义。NGINX JavaScript 遵循 ECMASc
 
 ### NJS 基本使用入门
 
-![njs-demo](./images/在%20Nginx%20中运行%20JavaScript/njs-demo.png)
+![njs-demo](./images/running-javascript-in-nginx/njs-demo.png)
 
 1. 启用 njs 模块
 2. 使用 js_import 引用 http.js 文件
