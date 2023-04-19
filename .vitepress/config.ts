@@ -26,8 +26,8 @@ export default defineConfig({
         text: 'CSS',
         items: [
           {
-            text: 'BEM、Atomic CSS 方法论',
-            link: '/articles/css/BEM、Atomic CSS 方法论',
+            text: 'BEM 与 Atomic CSS 方法论',
+            link: '/articles/css/bem-and-atomic-css-methodology',
           },
         ],
       },
