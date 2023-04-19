@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+const { BASE: base } = process.env
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -65,7 +66,7 @@ export default defineConfig({
 
   // Site Metadata
 
-  base: '/blog/',
+  base: base || '/',
 
   // Build
 
