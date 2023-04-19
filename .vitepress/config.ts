@@ -59,6 +59,10 @@ export default defineConfig({
     returnToTopLabel: '回到顶部',
   },
 
+  // Site Metadata
+
+  base: '/blog/',
+
   // Build
 
   srcExclude: ['**/list.md'],
