@@ -1,4 +1,4 @@
-# Web 服务器配置中的 NGINX JavaScript
+# Nginx 配置中的 JavaScript
 
 ## 前言
 
@@ -119,7 +119,7 @@ JS 的第一个大优点是 JS 是一种现代化的通用语言，如果不是�
 
 **每秒创建上下文次数**
 
-![每秒创建上下文次数](./images/Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E4%B8%AD%E7%9A%84%20NGINX%20JavaScript/created-contexts-sec.png)
+![每秒创建上下文次数](./images/javascript-in-nginx-configuration/created-contexts-sec.png)
 
 这是每秒创建上下文的数量对比，截图来自 2018 年 nginx 团队的分享，当时是 0.2 版本，现在已经到 0.7 版本了。可以看到 NJS 创建上下文的速度至少比其他引擎快了两个个数量级。
 
@@ -251,7 +251,7 @@ https://github.com/f5devcentral/nginx-njs-usecases
 
 ### Hello World
 
-![Hello World](./images/Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E4%B8%AD%E7%9A%84%20NGINX%20JavaScript/njs-demo.png)
+![Hello World](./images/javascript-in-nginx-configuration/njs-demo.png)
 
 1. 启用 njs 模块
 

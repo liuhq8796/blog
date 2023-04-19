@@ -40,11 +40,11 @@ export default defineConfig({
         items: [
           {
             text: '在 Nginx 中运行 JavaScript',
-            link: '/articles/nginx/在 Nginx 中运行 JavaScript',
+            link: '/articles/nginx/running-javascript-in-nginx',
           },
           {
-            text: 'Web 服务器配置中的 NGINX JavaScript',
-            link: '/articles/nginx/Web 服务器配置中的 NGINX JavaScript',
+            text: 'Nginx 配置中的 JavaScript',
+            link: '/articles/nginx/javascript-in-nginx-configuration',
           },
         ],
       },
