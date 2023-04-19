@@ -1,9 +1,9 @@
 # 文章目录
 
-## JS
+<!-- @include: ./js/list.md -->
 
 <!-- @include: ./css/list.md -->
 
-## HTML
+<!-- @include: ./html/list.md -->
 
 <!-- @include: ./nginx/list.md -->
