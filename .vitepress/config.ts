@@ -20,10 +20,12 @@ export default defineConfig({
     sidebar: [
       {
         text: 'JS',
+        link: '/articles/js/',
         items: [],
       },
       {
         text: 'CSS',
+        link: '/articles/css/',
         items: [
           {
             text: 'BEM 与 Atomic CSS 方法论',
@@ -33,10 +35,12 @@ export default defineConfig({
       },
       {
         text: 'HTML',
+        link: '/articles/html/',
         items: [],
       },
       {
         text: 'Nginx',
+        link: '/articles/nginx/',
         items: [
           {
             text: '在 Nginx 中运行 JavaScript',
