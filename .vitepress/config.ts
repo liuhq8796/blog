@@ -44,10 +44,6 @@ export default defineConfig({
         link: '/articles/nginx/',
         items: [
           {
-            text: '在 Nginx 中运行 JavaScript',
-            link: '/articles/nginx/running-javascript-in-nginx',
-          },
-          {
             text: 'Nginx 配置中的 JavaScript',
             link: '/articles/nginx/javascript-in-nginx-configuration',
           },
