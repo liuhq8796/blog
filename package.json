@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "build:github": "cross-env BASE='/blog' vitepress build",
     "preview": "vitepress preview",
     "format": "prettier --write ."
   },
@@ -17,7 +16,6 @@
     }
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "prettier": "^2.8.7",
     "vitepress": "1.0.0-alpha.72"
   }
