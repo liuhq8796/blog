@@ -8,13 +8,16 @@
 
 ## 用法
 
+<!-- prettier-ignore-start -->
 ```js
 import to from 'await-to-js'
 
 async function asyncTask() {
   let err, user, savedTask
+
   ;[err, user] = await to(UserModel.findById(1))
   if (!user) throw new CustomerError('No user found')
+
   ;[err, savedTask] = await to(TaskModel({ userId: user.id, name: 'Demo Task' }))
   if (err) throw new CustomError('Error occurred while saving task')
 
@@ -24,6 +27,7 @@ async function asyncTask() {
   }
 }
 ```
+<!-- prettier-ignore-end -->
 
 没有回调地狱，没有一个接着一个的链式调用，也没有大段大段的 try/catch，只有一个简单的 `await`。解构一下返回的结果，就可以很方便的捕获错误。
 
