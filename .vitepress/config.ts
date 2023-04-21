@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitepress'
-const { BASE: base } = process.env
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -68,10 +67,6 @@ export default defineConfig({
 
     returnToTopLabel: '回到顶部',
   },
-
-  // Site Metadata
-
-  base: base || '/',
 
   // Build
 
