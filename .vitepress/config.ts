@@ -22,7 +22,12 @@ export default defineConfig({
       {
         text: 'JS',
         link: '/articles/js/',
-        items: [],
+        items: [
+          {
+            text: 'await-to-js 如何优雅的捕获 await 的错误',
+            link: '/articles/js/await-to-js-how-to-elegantly-catch-errors-from-await',
+          },
+        ],
       },
       {
         text: 'CSS',
