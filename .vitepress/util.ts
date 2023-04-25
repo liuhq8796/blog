@@ -6,7 +6,10 @@ export const scanDir = (dir: string): DefaultTheme.SidebarItem[] => {
   const dirPath = join(__dirname, '../articles', dir.toLowerCase())
 
   const files = readdirSync(dirPath).filter(
-    (file) => !['images', 'index.md', 'list.md'].includes(file) && file.endsWith('.md'),
+    (file) =>
+      !['images', 'index.md', 'list.md'].includes(file) &&
+      file.endsWith('.md') &&
+      !file.startsWith('_'),
   )
 
   return files.map((file) => {
