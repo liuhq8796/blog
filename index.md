@@ -12,6 +12,8 @@ features:
     link: /articles/js/
   - title: CSS
     link: /articles/css/
+  - title: TS
+    link: /articles/ts/
   - title: Nginx
     link: /articles/nginx/
 ---
