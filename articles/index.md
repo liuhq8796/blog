@@ -4,4 +4,6 @@
 
 <!-- @include: ./css/list.md -->
 
+<!-- @include: ./ts/list.md -->
+
 <!-- @include: ./nginx/list.md -->
