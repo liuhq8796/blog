@@ -16,6 +16,9 @@ devDependencies:
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@18.15.13)(typescript@5.0.4)
+  typescript:
+    specifier: ^5.0.4
+    version: 5.0.4
   vitepress:
     specifier: 1.0.0-alpha.72
     version: 1.0.0-alpha.72(@types/node@18.15.13)
@@ -824,6 +827,8 @@ packages:
       '@swc/core':
         optional: true
       '@swc/wasm':
+        optional: true
+      typescript:
         optional: true
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
