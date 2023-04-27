@@ -10,10 +10,10 @@ hero:
 features:
   - title: JS
     link: /articles/js/
-  - title: CSS
-    link: /articles/css/
   - title: TS
     link: /articles/ts/
+  - title: CSS
+    link: /articles/css/
   - title: Nginx
     link: /articles/nginx/
 ---
