@@ -611,7 +611,7 @@ function looseCompareArrays(a: any[], b: any[]) {
 }
 ```
 
-## `looseEqual`` 宽松比较
+## `looseEqual` 宽松比较
 
 ```ts
 export function looseEqual(a: any, b: any): boolean {
