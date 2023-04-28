@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: 学海拾贝
-  text: LucasLiu's 博客
+  text: Lucas Liu's 博客
   tagline: 记录我的学习笔记
 
 features:
