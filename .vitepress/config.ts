@@ -4,8 +4,8 @@ import sidebar from './sidebar'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: '学海拾贝',
-  titleTemplate: "LucasLiu's 博客网站",
-  description: "LucasLiu's 博客网站",
+  titleTemplate: "Lucas Liu's 博客",
+  description: "Lucas Liu's 博客",
 
   lastUpdated: true,
 
