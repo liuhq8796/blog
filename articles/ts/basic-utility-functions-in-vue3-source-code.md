@@ -391,7 +391,7 @@ export const isBuiltInDirective = /*#__PURE__*/ makeMap(
 )
 ```
 
-## `cacheStringFunction` 缓存
+## `cacheStringFunction` 缓存函数字符串结果
 
 ```ts
 const cacheStringFunction = <T extends (str: string) => string>(fn: T): T => {
@@ -403,9 +403,7 @@ const cacheStringFunction = <T extends (str: string) => string>(fn: T): T => {
 }
 ```
 
-这个函数也是和上面 MakeMap 函数类似。只不过接收参数的是函数。 《JavaScript 设计模式与开发实践》书中的第四章 JS 单例模式也是类似的实现。
-
-另外，在 vue2 的工具函数中，与之类似的是 cached 函数，差别在于被 cached 函数所接收的函数的返回值类型并不固定。
+在 vue2 的工具函数中，与之类似的是 cached 函数，差别在于被 cached 函数所接收的函数的返回值类型并不固定。
 
 ## `camelize` 转换成驼峰格式
 
