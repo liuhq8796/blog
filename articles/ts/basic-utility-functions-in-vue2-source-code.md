@@ -1,6 +1,6 @@
 # Vue2 源码中的基础工具函数
 
-## emptyObject 空对象
+## `emptyObject` 空对象
 
 ```ts
 export const emptyObject: Record<string, any> = Object.freeze({})
