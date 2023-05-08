@@ -1,5 +1,13 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig, loadEnv } from 'vitepress'
 import sidebar from './sidebar'
+
+let aboutMeUrl = ''
+
+const env = loadEnv('', process.cwd())
+
+if (process.env.NODE_ENV === 'production') {
+  aboutMeUrl = env.VITE_ABOUT_ME_URL
+}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -11,7 +19,10 @@ export default defineConfig({
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [{ text: '全部文章', link: '/articles/' }],
+    nav: [
+      { text: '全部文章', link: '/articles/' },
+      { text: '关于我', link: aboutMeUrl, target: '_blank' },
+    ],
 
     outlineTitle: '页面导航',
 
