@@ -1,10 +1,10 @@
-# 美化 img 为空时的图裂效果
+# 隐藏 img 为空时的图裂效果
 
 ## 问题
 
 当 img 标签的 src 为空时，网页中会出现图裂的图标，非常的不美观，如下所示：
 
-![图裂](./images/css-beautify-img-empty-broken/img-error.png)
+![图裂](./images/hides-the-crack-effect-when-the-img-is-empty/img-error.png)
 
 ## 解决方案
 
