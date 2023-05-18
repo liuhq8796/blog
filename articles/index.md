@@ -7,3 +7,7 @@
 <!-- @include: ./ts/list.md -->
 
 <!-- @include: ./nginx/list.md -->
+
+<!-- @include: ./vite/list.md -->
+
+<!-- @include: ./pnpm/list.md -->
