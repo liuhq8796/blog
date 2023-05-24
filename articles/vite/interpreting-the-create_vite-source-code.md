@@ -33,59 +33,217 @@ $ pnpm create vite
 
 ## package 文件
 
+<!-- prettier-ignore-start -->
 ```json
 // create-vite/package.json
 {
   "name": "create-vite",
-  "version": "3.0.0",
+  "version": "4.3.1",
   "type": "module",
   "bin": {
     "create-vite": "index.js",
     "cva": "index.js"
   },
-  "main": "index.js",
+  "files": [
+    "index.js",
+    "template-*",
+    "dist"
+  ],
   "engines": {
     "node": "^14.18.0 || >=16.0.0"
   }
 }
 ```
+<!-- prettier-ignore-end -->
 
 - [`"type"`](https://nodejs.org/api/packages.html#type) 字段定义了 `Node.js` 用于以该 `package.json` 文件作为最近父级的所有 `.js` 文件的模块格式。
 
-- [`"engines"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#engines) 字段可以指定运行该包模块所需的 `Node.js` 版本以及能够正确安装该包模块的 `npm` 版本。
-
-- [`"main"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main) 指 npm package 的入口文件，当我们对某个 package 进行导入时，实际上导入的是 main 字段所指向的文件。在这里我们可以知道 create-vite 的入口文件是 index.js。
-
 - [`"bin"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#bin) 是命令名称到本地文件名的映射。
 
-  当用户安装带有 bin 字段的包时，如果是全局安装，npm 将会使用符号链接把这些文件链接到 /usr/local/node_modules/.bin/；如果是本地安装，会链接到 ./node_modules/.bin/。
+- [`"files"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#files) 字段是一个包含文件名或者文件名模式的数组，用于描述包中包含哪些文件。
+
+  该字段的默认值是 `["*"]`，表示包含所有文件。如果包含了该字段，那么该字段的值就会覆盖默认值。
+
+  该字段的值是一个数组，数组中的每一项都是一个文件名或者文件名模式。文件名模式可以使用 `*`、`?`、`[...]`、`!(...)`、`?(...)`、`+(...)`、`*(...)`、`@(...)` 等通配符。
+
+  该字段的值是相对于 `package.json` 文件所在的目录的路径。如果该字段的值是一个目录，那么该目录下的所有文件都会被包含。
+
+- [`"engines"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#engines) 字段可以指定运行该包模块所需的 `Node.js` 版本以及能够正确安装该包模块的 `npm` 版本。
+
+  当用户安装带有 bin 字段的包时，如果是全局安装，npm 将会使用符号链接把这些文件链接到 `/usr/local/node_modules/.bin/`；如果是本地安装，会链接到 `./node_modules/.bin/`。
 
 接着我们来看看 index.js 这个文件。
 
 ## 入口文件主流程
 
-```js
+```node
 // index.js
-// 高版本的node支持 node 前缀，绕过 require 缓存访问内置模块
+#!/usr/bin/env node
+
+import './dist/index.mjs'
+```
+
+嘿这个小机灵鬼，上次看还不是这样的。
+
+打开打包配置文件，看到真正的入口在 `src/index`。
+
+```ts
+// src/index.ts
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+// 可以在跨平台的情况下执行命令行的库 链接：https://www.npmjs.com/package/cross-spawn
+import spawn from 'cross-spawn'
 // 解析命令行的参数 链接：https://www.npmjs.com/package/minimist
 import minimist from 'minimist'
-// 询问选择之类的  链接：https://npm.im/prompts
+// 询问选择之类的  链接：https://www.npmjs.com/package/prompts
 import prompts from 'prompts'
-// 终端颜色输出的库 链接：https://npm.im/kolorist
-import { blue, cyan, green, lightRed, magenta, red, reset, yellow } from 'kolorist'
+// 终端颜色输出的库 链接：https://www.npmjs.com/package/kolorist
+import { blue, cyan, green, lightGreen, lightRed, magenta, red, reset, yellow } from 'kolorist'
 
 // Avoids autoconversion to number of the project name by defining that the args
 // non associated with an option ( _ ) needs to be parsed as a string. See #4606
-const argv = minimist(process.argv.slice(2), { string: ['_'] })
+// 避免通过定义与选项无关的 args（_）自动转换为项目名称，需要将其解析为字符串。见 #4606
+const argv = minimist<{
+  t?: string
+  template?: string
+}>(process.argv.slice(2), { string: ['_'] })
 // 当前 Nodejs 的执行目录
 const cwd = process.cwd()
 
+// 定义之后要用到的 Framework 数据和类型
+type ColorFunc = (str: string | number) => string
+type FrameworkVariant = {
+  name: string
+  display: string
+  color: ColorFunc
+  customCommand?: string
+}
+type Framework = {
+  name: string
+  display: string
+  color: ColorFunc
+  variants: FrameworkVariant[]
+}
+
+const FRAMEWORKS: Framework[] = [
+  // 实际的源码中写了很多框架，我这里只以vue和vue的变体举例子
+  {
+    name: 'vue',
+    display: 'Vue',
+    color: green,
+    variants: [
+      {
+        name: 'vue-ts',
+        display: 'TypeScript',
+        color: blue,
+      },
+      {
+        name: 'vue',
+        display: 'JavaScript',
+        color: yellow,
+      },
+      {
+        name: 'custom-create-vue',
+        display: 'Customize with create-vue ↗',
+        color: green,
+        customCommand: 'npm create vue@latest TARGET_DIR',
+      },
+      {
+        name: 'custom-nuxt',
+        display: 'Nuxt ↗',
+        color: lightGreen,
+        customCommand: 'npm exec nuxi init TARGET_DIR',
+      },
+    ],
+  },
+]
+
+// 从 FRAMEWORKS 中获取所有的模板名称
+const TEMPLATES = FRAMEWORKS.map(
+  (f) => (f.variants && f.variants.map((v) => v.name)) || [f.name],
+).reduce((a, b) => a.concat(b), [])
+
+// 管理需要重命名的文件
+const renameFiles: Record<string, string | undefined> = {
+  _gitignore: '.gitignore',
+}
+
+// 默认的目标目录
+const defaultTargetDir = 'vite-project'
+
 // 主函数内容省略，后文讲述
-async function init() {}
+async function init() {
+  // 获取命令行参数中的目标目录
+  const argTargetDir = formatTargetDir(argv._[0])
+  // 获取命令行参数中的模板名称
+  const argTemplate = argv.template || argv.t
+
+  // 获取实际的目标目录
+  let targetDir = argTargetDir || defaultTargetDir
+  // 获取实际的项目名称
+  const getProjectName = () => (targetDir === '.' ? path.basename(path.resolve()) : targetDir)
+
+  // 定义一个 prompt.Answers 类型的变量，用于存储 prompts 询问的结果
+  let result: prompts.Answers<'projectName' | 'overwrite' | 'packageName' | 'framework' | 'variant'>
+
+  try {
+    result = await prompts([
+      // 输入项目名称
+      {
+        // 如果已有项目名称(目标目录)，则跳过该问题；若不存在，则输入文本
+        type: argTargetDir ? null : 'text',
+        // 输入的值将保存在返回的对象中的此键/属性下
+        name: 'projectName',
+        // 要向用户显示的信息
+        message: reset('Project name:'),
+        // 可选的默认提示值。还支持异步函数
+        initial: defaultTargetDir,
+        // 当前 prompt 状态更改时的回调。函数签名为 (state)，其中 state 是具有当前状态快照的对象。
+        // 状态对象有两个属性 value 和 aborted。例如 { value: 'foo', aborted: false }
+        onState: (state) => {
+          targetDir = formatTargetDir(state.value) || defaultTargetDir
+        },
+      },
+      // 是否覆盖已有的目录
+      {
+        // 如果目标目录不存在，或目标目录为空目录，则跳过该问题；否则询问是否覆盖
+        type: () => (!fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'confirm'),
+        name: 'overwrite',
+        message: () =>
+          (targetDir === '.' ? 'Current directory' : `Target directory "${targetDir}"`) +
+          ` is not empty. Remove existing files and continue?`,
+      },
+      // 当上一条问题选择不覆盖已有目录时，抛出错误；否则跳过该步骤
+      {
+        type: (_, { overwrite }: { overwrite?: boolean }) => {
+          if (overwrite === false) {
+            throw new Error(red('✖') + ' Operation cancelled')
+          }
+          return null
+        },
+        name: 'overwriteChecker',
+      },
+      // 输入包名
+      {
+        // 若项目名符合包名规范，则跳过该问题；否则输入文本
+        type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
+        name: 'packageName',
+        message: reset('Package name:'),
+        // 默认值提示，值为当前项目名转换成的合法的包名
+        initial: () => toValidPackageName(getProjectName()),
+        // 接收用户输入。如果值有效，则应返回 true ，否则应返回错误消息 String
+        // 如果返回 false ，则显示默认错误消息
+        validate: (dir) => isValidPackageName(dir) || 'Invalid package.json name',
+      },
+    ])
+  } catch (cancelled: any) {
+    console.log(cancelled.message)
+    return
+  }
+}
+
 init().catch((e) => {
   console.error(e)
 })
