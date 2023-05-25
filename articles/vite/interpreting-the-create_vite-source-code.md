@@ -76,7 +76,7 @@ $ pnpm create vite
 
 ## 入口文件主流程
 
-```node
+```js
 // index.js
 #!/usr/bin/env node
 
@@ -341,7 +341,8 @@ async function init() {
     const [command, ...args] = fullCustomCommand.split(' ')
     // 我们在这里替换自定义命令里的 TARGET_DIR 占位符，因为目标目录名可能包含空格，在上一步中会被错误地分割
     const replacedArgs = args.map((arg) => arg.replace(/TARGET_DIR/, targetDir))
-    // 将 stdio 选项设置为 ‘inherit’ 时，子进程将继承父进程的标准输入、输出和错误流。这意味着子进程的 stdin、stdout 和 stderr 将与父进程共享，而不是被重定向到管道或文件中
+    // 将 stdio 选项设置为 ‘inherit’ 时，子进程将继承父进程的标准输入、输出和错误流
+    // 这意味着子进程的 stdin、stdout 和 stderr 将与父进程共享，而不是被重定向到管道或文件中
     // 这对于需要在子进程中运行交互式命令的情况非常有用，因为它允许用户与子进程进行交互
     const { status } = spawn.sync(command, replacedArgs, { stdio: 'inherit' })
     process.exit(status ?? 0)
@@ -549,18 +550,18 @@ create-vite 的主要流程是：
 Node API：
 
 - url
-  - fileURLToPath: 文件 url 转路径
+  - [fileURLToPath](https://nodejs.org/docs/latest-v20.x/api/url.html#urlfileurltopathurl): 文件 url 转路径
 - path
-  - basename: 获取文件路径的文件名部分
-  - resolve: 解析路径 (拼接)
-  - join: 将多个参数组合成一个 path
-  - relative: 相对路径查找
+  - [basename](https://nodejs.org/docs/latest-v20.x/api/path.html#pathbasenamepath-suffix): 获取文件路径的文件名部分
+  - [resolve](https://nodejs.org/docs/latest-v20.x/api/path.html#pathresolvepaths): 解析路径 (拼接)
+  - [join](https://nodejs.org/docs/latest-v20.x/api/path.html#pathjoinpaths): 将多个参数组合成一个 path
+  - [relative](https://nodejs.org/docs/latest-v20.x/api/path.html#pathrelativefrom-to): 相对路径查找
 - fs
-  - existsSync: 以同步方式检查目录是否存在
-  - mkdirSync: 以同步方式创建文件夹
-  - writeFileSync: 以同步方式写入文件
-  - readdirSync: 以同步方式读取目录
-  - statSync: 以同步方式读取文件信息
-    - isDirectory: 判断是否为文件夹
-  - copyFileSync: 以同步方式拷贝文件
-  - rmSync: 以同步方式删除文件
+  - [existsSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsexistssyncpath): 以同步方式检查目录是否存在
+  - [mkdirSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsmkdirsyncpath-options): 以同步方式创建文件夹
+  - [writeFileSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fswritefilesyncfile-data-options): 以同步方式写入文件
+  - [readdirSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsreaddirsyncpath-options): 以同步方式读取目录
+  - [statSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsstatsyncpath-options): 以同步方式读取文件信息
+    - [isDirectory](https://nodejs.org/docs/latest-v20.x/api/fs.html#statsisdirectory): 判断是否为文件夹
+  - [copyFileSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fscopyfilesyncsrc-dest-mode): 以同步方式拷贝文件
+  - [rmSync](https://nodejs.org/docs/latest-v20.x/api/fs.html#fsrmsyncpath-options): 以同步方式删除文件
