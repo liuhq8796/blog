@@ -177,7 +177,7 @@ const defaultTargetDir = 'vite-project'
 async function init() {
   // 获取命令行参数中的目标目录
   const argTargetDir = formatTargetDir(argv._[0])
-  // 获取命令行参数中的模板名称
+  // 获取命令行参数中 --template 或 -t 的模板名称
   const argTemplate = argv.template || argv.t
 
   // 获取实际的目标目录
@@ -189,200 +189,243 @@ async function init() {
   let result: prompts.Answers<'projectName' | 'overwrite' | 'packageName' | 'framework' | 'variant'>
 
   try {
-    result = await prompts([
-      // 输入项目名称
+    result = await prompts(
+      [
+        // 输入项目名称
+        {
+          // 如果已有项目名称(目标目录)，则跳过该问题；若不存在，则输入文本
+          type: argTargetDir ? null : 'text',
+          // 输入的值将保存在返回的对象中的此键/属性下
+          name: 'projectName',
+          // 要向用户显示的信息
+          message: reset('Project name:'),
+          // 可选的默认提示值。还支持异步函数
+          initial: defaultTargetDir,
+          // 当前 prompt 状态更改时的回调。函数签名为 (state)，其中 state 是具有当前状态快照的对象。
+          // 状态对象有两个属性 value 和 aborted。例如 { value: 'foo', aborted: false }
+          onState: (state) => {
+            targetDir = formatTargetDir(state.value) || defaultTargetDir
+          },
+        },
+        // 是否覆盖已有的目录
+        {
+          // 如果目标目录不存在，或目标目录为空目录，则跳过该问题；否则询问是否覆盖
+          type: () => (!fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'confirm'),
+          name: 'overwrite',
+          message: () =>
+            (targetDir === '.' ? 'Current directory' : `Target directory "${targetDir}"`) +
+            ` is not empty. Remove existing files and continue?`,
+        },
+        // 当上一条问题选择不覆盖已有目录时，抛出错误；否则跳过该步骤
+        {
+          type: (_, { overwrite }: { overwrite?: boolean }) => {
+            if (overwrite === false) {
+              throw new Error(red('✖') + ' Operation cancelled')
+            }
+            return null
+          },
+          name: 'overwriteChecker',
+        },
+        // 输入包名
+        {
+          // 若项目名符合包名规范，则跳过该问题；否则输入文本
+          type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
+          name: 'packageName',
+          message: reset('Package name:'),
+          // 默认值提示，值为当前项目名转换成的合法的包名
+          initial: () => toValidPackageName(getProjectName()),
+          // 接收用户输入。如果值有效，则应返回 true ，否则应返回错误消息 String
+          // 如果返回 false ，则显示默认错误消息
+          validate: (dir) => isValidPackageName(dir) || 'Invalid package.json name',
+        },
+        // 选择框架
+        {
+          // 若命令行参数中有模板名称，并且该名称在 TEMPLATES 中，则跳过该问题；否则选择框架
+          type: argTemplate && TEMPLATES.includes(argTemplate) ? null : 'select',
+          name: 'framework',
+          message:
+            typeof argTemplate === 'string' && !TEMPLATES.includes(argTemplate)
+              ? reset(`"${argTemplate}" isn't a valid template. Please choose from below: `)
+              : reset('Select a framework:'),
+          initial: 0,
+          // 字符串或选项对象的数组 [{ title, description, value, disabled }, ...]
+          // 如果未指定 value，则数组中选项的索引将用作其值。
+          choices: FRAMEWORKS.map((framework) => {
+            const frameworkColor = framework.color
+            return {
+              title: frameworkColor(framework.display || framework.name),
+              value: framework,
+            }
+          }),
+        },
+        // 选择框架变体
+        {
+          // 接收上一个 prompt 的值，若该值存在 variants 属性，则选择框架变体；否则跳过该问题
+          type: (framework: Framework) => (framework && framework.variants ? 'select' : null),
+          name: 'variant',
+          message: reset('Select a variant:'),
+          choices: (framework: Framework) =>
+            framework.variants.map((variant) => {
+              const variantColor = variant.color
+              return {
+                title: variantColor(variant.display || variant.name),
+                value: variant.name,
+              }
+            }),
+        },
+      ],
       {
-        // 如果已有项目名称(目标目录)，则跳过该问题；若不存在，则输入文本
-        type: argTargetDir ? null : 'text',
-        // 输入的值将保存在返回的对象中的此键/属性下
-        name: 'projectName',
-        // 要向用户显示的信息
-        message: reset('Project name:'),
-        // 可选的默认提示值。还支持异步函数
-        initial: defaultTargetDir,
-        // 当前 prompt 状态更改时的回调。函数签名为 (state)，其中 state 是具有当前状态快照的对象。
-        // 状态对象有两个属性 value 和 aborted。例如 { value: 'foo', aborted: false }
-        onState: (state) => {
-          targetDir = formatTargetDir(state.value) || defaultTargetDir
+        onCancel() {
+          throw new Error(red('✖') + ' Operation cancelled')
         },
       },
-      // 是否覆盖已有的目录
-      {
-        // 如果目标目录不存在，或目标目录为空目录，则跳过该问题；否则询问是否覆盖
-        type: () => (!fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'confirm'),
-        name: 'overwrite',
-        message: () =>
-          (targetDir === '.' ? 'Current directory' : `Target directory "${targetDir}"`) +
-          ` is not empty. Remove existing files and continue?`,
-      },
-      // 当上一条问题选择不覆盖已有目录时，抛出错误；否则跳过该步骤
-      {
-        type: (_, { overwrite }: { overwrite?: boolean }) => {
-          if (overwrite === false) {
-            throw new Error(red('✖') + ' Operation cancelled')
-          }
-          return null
-        },
-        name: 'overwriteChecker',
-      },
-      // 输入包名
-      {
-        // 若项目名符合包名规范，则跳过该问题；否则输入文本
-        type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
-        name: 'packageName',
-        message: reset('Package name:'),
-        // 默认值提示，值为当前项目名转换成的合法的包名
-        initial: () => toValidPackageName(getProjectName()),
-        // 接收用户输入。如果值有效，则应返回 true ，否则应返回错误消息 String
-        // 如果返回 false ，则显示默认错误消息
-        validate: (dir) => isValidPackageName(dir) || 'Invalid package.json name',
-      },
-    ])
+    )
   } catch (cancelled: any) {
     console.log(cancelled.message)
     return
   }
+
+  // 获取询问结果
+  const { framework, overwrite, packageName, variant } = result
+
+  // 获取项目根目录
+  const root = path.join(cwd, targetDir)
+
+  // 如果选择覆盖已有目录，则清空目录；否则创建目录
+  if (overwrite) {
+    emptyDir(root)
+  } else if (!fs.existsSync(root)) {
+    // recursive: true 表示递归创建目录
+    fs.mkdirSync(root, { recursive: true })
+  }
+
+  // 确定使用的模版
+  let template: string = variant || framework?.name || argTemplate
+  // 是否使用 react-swc 模版
+  let isReactSwc = false
+  if (template.includes('-swc')) {
+    isReactSwc = true
+    template = template.replace('-swc', '')
+  }
+
+  // 确定使用的包管理器
+  const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent)
+  const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
+  // 是否使用 yarn 1.x 版本
+  const isYarn1 = pkgManager === 'yarn' && pkgInfo?.version?.startsWith('1.')
+
+  // 获取自定义命令
+  const { customCommand } =
+    FRAMEWORKS.flatMap((f) => f.variants).find((v) => v.name === template) ?? {}
+
+  // 如果自定义命令存在，则执行自定义命令并退出
+  if (customCommand) {
+    const fullCustomCommand = customCommand
+      // 将命令中默认的 npm 替换为实际使用的包管理器
+      .replace(/^npm create/, `${pkgManager} create`)
+      // 如果使用 yarn 1.x 版本，则将命令中的 @latest 替换为空字符串
+      .replace('@latest', () => (isYarn1 ? '' : '@latest'))
+      .replace(/^npm exec/, () => {
+        // 如果使用 pnpm 或非 1.x 的yarn，则将命令中的 npm exec 替换为 pnpm dlx 或 yarn dlx
+        if (pkgManager === 'pnpm') {
+          return 'pnpm dlx'
+        }
+        if (pkgManager === 'yarn' && !isYarn1) {
+          return 'yarn dlx'
+        }
+        // 在其他情况下，仍然使用 npm exec
+        // 包括使用 yarn 1.x 版本以及其他包管理器
+        return 'npm exec'
+      })
+
+    const [command, ...args] = fullCustomCommand.split(' ')
+    // 我们在这里替换自定义命令里的 TARGET_DIR 占位符，因为目标目录名可能包含空格，在上一步中会被错误地分割
+    const replacedArgs = args.map((arg) => arg.replace(/TARGET_DIR/, targetDir))
+    // 将 stdio 选项设置为 ‘inherit’ 时，子进程将继承父进程的标准输入、输出和错误流。这意味着子进程的 stdin、stdout 和 stderr 将与父进程共享，而不是被重定向到管道或文件中
+    // 这对于需要在子进程中运行交互式命令的情况非常有用，因为它允许用户与子进程进行交互
+    const { status } = spawn.sync(command, replacedArgs, { stdio: 'inherit' })
+    process.exit(status ?? 0)
+  }
+
+  console.log(`\nScaffolding project in ${root}...`)
+
+  // 拼接模版目录
+  const templateDir = path.resolve(fileURLToPath(import.meta.url), '../..', `template-${template}`)
+
+  // 写入文件的方法，如果提供了 content，则写入 content，否则拷贝同名文件
+  const write = (file: string, content?: string) => {
+    const targetPath = path.join(root, renameFiles[file] ?? file)
+    if (content) {
+      fs.writeFileSync(targetPath, content)
+    } else {
+      copy(path.join(templateDir, file), targetPath)
+    }
+  }
+
+  // 读取模版目录下的所有文件
+  const files = fs.readdirSync(templateDir)
+  // 将模板目录下的所有文件（除了package.json）写入到目标目录
+  for (const file of files.filter((f) => f !== 'package.json')) {
+    write(file)
+  }
+
+  // 读取模版目录下的 package.json，转为 JSON 对象
+  const pkg = JSON.parse(fs.readFileSync(path.join(templateDir, 'package.json'), 'utf-8'))
+
+  // 修改 package JSON 对象中的 name 字段
+  pkg.name = packageName || getProjectName()
+
+  // 重新写入 package.json
+  write('package.json', JSON.stringify(pkg, null, 2) + '\n')
+
+  // 如果使用 react-swc 模版，则执行 setupReactSwc 函数设置项目
+  if (isReactSwc) {
+    setupReactSwc(root, template.endsWith('-ts'))
+  }
+
+  // 获取从当前目录到项目根目录的相对路径
+  const cdProjectName = path.relative(cwd, root)
+  console.log(`\nDone. Now run:\n`)
+  // 如果项目根目录不是当前执行命令的目录，则输出 cd 命令
+  if (root !== cwd) {
+    console.log(`  cd ${cdProjectName.include(' ') ? `"${cdProjectName}"` : `${cdProjectName}`}`)
+  }
+  // 输出安装依赖和启动项目的命令
+  switch (pkgManager) {
+    case 'yarn':
+      console.log('  yarn')
+      console.log('  yarn dev')
+      break
+    default:
+      console.log(`  ${pkgManager} install`)
+      console.log(`  ${pkgManager} run dev`)
+      break
+  }
+  // 输出空行
+  console.log()
 }
 
+// 执行 init 函数
 init().catch((e) => {
   console.error(e)
 })
 ```
 
-### 输出目录
+## 主流程中用到的工具函数
 
-```js
-// 命令行第一个参数，替换反斜杠 / 为空字符串
-let targetDir = formatTargetDir(argv._[0])
+### `formatTargetDir` 格式化目标目录
 
-// 命令行参数 --template 或者 -t
-let template = argv.template || argv.t
-
-const defaultTargetDir = 'vite-project'
-// 获取项目名
-const getProjectName = () => (targetDir === '.' ? path.basename(path.resolve()) : targetDir)
-```
-
-#### 格式化目标路径
-
-替换反斜杠 `/` 为空字符串。
-
-```js
-function formatTargetDir(targetDir) {
+```ts
+function formatTargetDir(targetDir: string | undefined) {
+  // 将反斜杠 `/` 替换为空字符串
   return targetDir?.trim().replace(/\/+$/g, '')
 }
 ```
 
-### prompts 询问项目名、选择框架、选择框架变体等
+### `copy` 拷贝文件或文件夹
 
-```js
-let result = {}
-try {
-  result = await prompts(
-    [
-      {
-        type: targetDir ? null : 'text',
-        name: 'projectName',
-        message: reset('Project name:'),
-        initial: defaultTargetDir,
-        onState: (state) => {
-          targetDir = formatTargetDir(state.value) || defaultTargetDir
-        },
-      },
-      // overwrite 已有目录，是否重写
-      // packageName 输入的项目名
-      // framework 框架
-      // variant 变体， 比如 vue => vue-ts
-    ],
-    {
-      onCancel: () => {
-        throw new Error(red('✖') + ' Operation cancelled')
-      },
-    },
-  )
-} catch (cancelled) {
-  console.log(cancelled.message)
-  return
-}
-const { framework, overwrite, packageName, variant } = result
-
-// user choice associated with prompts
-const { framework, overwrite, packageName, variant } = result
-```
-
-### 重写已有目录或创建不存在的目录
-
-```js
-// 项目根目录
-const root = path.join(cwd, targetDir)
-
-if (overwrite) {
-  // 清空文件夹
-  emptyDir(root)
-} else if (!fs.existsSync(root)) {
-  // 创建文件夹
-  fs.mkdirSync(root, { recursive: true })
-}
-```
-
-#### 延伸函数 emptyDir
-
-清空目标目录，忽略 .git 目录
-
-```js
-function emptyDir(dir) {
-  if (!fs.existsSync(dir)) {
-    return
-  }
-  for (const file of fs.readdirSync(dir)) {
-    // 跳过 .git 目录
-    if (file === '.git') {
-      continue
-    }
-    fs.rmSync(path.resolve(dir, file), { recursive: true, force: true })
-  }
-}
-```
-
-### 获取模板路径
-
-```js
-// determine template
-template = variant || framework || template
-
-console.log(`\nScaffolding project in ${root}...`)
-
-const templateDir = path.resolve(fileURLToPath(import.meta.url), '..', `template-${template}`)
-```
-
-### 写入文件
-
-```js
-const write = (file, content) => {
-  // renameFile
-  const targetPath = renameFiles[file] ? path.join(root, renameFiles[file]) : path.join(root, file)
-  if (content) {
-    fs.writeFileSync(targetPath, content)
-  } else {
-    copy(path.join(templateDir, file), targetPath)
-  }
-}
-```
-
-这里的 `renameFiles`，是因为在某些编辑器或者电脑上不支持 `.gitignore`。
-
-```js
-const renameFiles = {
-  _gitignore: '.gitignore',
-}
-```
-
-#### 延伸函数 copy & copyDir
-
-copy 拷贝文件，遇到文件夹调用 copyDir
-
-```js
-function copy(src, dest) {
+```ts
+function copy(src: string, dest: string) {
   const stat = fs.statSync(src)
   if (stat.isDirectory()) {
     copyDir(src, dest)
@@ -390,8 +433,33 @@ function copy(src, dest) {
     fs.copyFileSync(src, dest)
   }
 }
+```
 
-function copyDir(srcDir, destDir) {
+### `isValidPackageName` 判断是否为合法的包名
+
+```ts
+function isValidPackageName(projectName: string) {
+  return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(projectName)
+}
+```
+
+### `toValidPackageName` 将包名转为合法的包名
+
+```ts
+function toValidPackageName(projectName: string) {
+  return projectName
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/^[._]/, '')
+    .replace(/[^a-z\d\-~]+/g, '-')
+}
+```
+
+### `copyDir` 拷贝文件夹
+
+```ts
+function copyDir(srcDir: string, destDir: string) {
   fs.mkdirSync(destDir, { recursive: true })
   for (const file of fs.readdirSync(srcDir)) {
     const srcFile = path.resolve(srcDir, file)
@@ -401,56 +469,35 @@ function copyDir(srcDir, destDir) {
 }
 ```
 
-### 根据模块路径的文件写入目标路径
+### `isEmpty` 判断文件夹是否为空
 
-`package.json` 文件单独处理，要修改它内部的 `name` 属性。
-
-```js
-const files = fs.readdirSync(templateDir)
-for (const file of files.filter((f) => f !== 'package.json')) {
-  write(file)
+```ts
+function isEmpty(path: string) {
+  const files = fs.readdirSync(path)
+  return files.length === 0 || (files.length === 1 && files[0] === '.git')
 }
-
-const pkg = JSON.parse(fs.readFileSync(path.join(templateDir, `package.json`), 'utf-8'))
-
-pkg.name = packageName || getProjectName()
-
-write('package.json', JSON.stringify(pkg, null, 2))
 ```
 
-### 打印安装完成后的信息
+### `emptyDir` 清空文件夹
 
-```js
-const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent)
-const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
-
-console.log(`\nDone. Now run:\n`)
-if (root !== cwd) {
-  console.log(`  cd ${path.relative(cwd, root)}`)
+```ts
+function emptyDir(dir: string) {
+  if (!fs.existsSync(dir)) {
+    return
+  }
+  for (const file of fs.readdirSync(dir)) {
+    if (file === '.git') {
+      continue
+    }
+    fs.rmSync(path.resolve(dir, file), { recursive: true, force: true })
+  }
 }
-switch (pkgManager) {
-  case 'yarn':
-    console.log('  yarn')
-    console.log('  yarn dev')
-    break
-  default:
-    console.log(`  ${pkgManager} install`)
-    console.log(`  ${pkgManager} run dev`)
-    break
-}
-console.log()
 ```
 
-### 延伸函数 pkgFromUserAgent
+### `pkgFromUserAgent` 从 user agent 中获取包名和版本号
 
-提取用户代理信息中的包管理器名称
-
-```js
-/**
- * @param {string | undefined} userAgent process.env.npm_config_user_agent
- * @returns object | undefined
- */
-function pkgFromUserAgent(userAgent) {
+```ts
+function pkgFromUserAgent(userAgent: string | undefined) {
   if (!userAgent) return undefined
   const pkgSpec = userAgent.split(' ')[0]
   const pkgSpecArr = pkgSpec.split('/')
@@ -458,6 +505,28 @@ function pkgFromUserAgent(userAgent) {
     name: pkgSpecArr[0],
     version: pkgSpecArr[1],
   }
+}
+```
+
+### `setupReactSwc` 设置 react-swc
+
+```ts
+function setupReactSwc(root: string, isTs: boolean) {
+  editFile(path.resolve(root, 'package.json'), (content) => {
+    return content.replace(/"@vitejs\/plugin-react": ".+?"/, `"@vitejs/plugin-react-swc": "^3.0.0"`)
+  })
+  editFile(path.resolve(root, `vite.config.${isTs ? 'ts' : 'js'}`), (content) => {
+    return content.replace('@vitejs/plugin-react', '@vitejs/plugin-react-swc')
+  })
+}
+```
+
+### `editFile` 编辑文件
+
+```ts
+function editFile(file: string, callback: (content: string) => string) {
+  const content = fs.readFileSync(file, 'utf-8')
+  fs.writeFileSync(file, callback(content), 'utf-8')
 }
 ```
 
@@ -472,6 +541,7 @@ create-vite 的主要流程是：
 
 三个有用的 npm 包：
 
+- [spawn](https://www.npmjs.com/package/spawn)：调用系统命令
 - [minimist](https://www.npmjs.com/package/minimist)：命令行参数解析
 - [prompts](https://www.npmjs.com/package/prompts)：交互式命令行提示工具
 - [kolorist](https://www.npmjs.com/package/kolorist)：命令行颜色工具
