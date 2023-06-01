@@ -35,6 +35,15 @@ export default defineConfig({
     sidebarMenuLabel: '目录',
 
     returnToTopLabel: '回到顶部',
+
+    search: {
+      provider: 'algolia',
+      options: {
+        appId: env.VITE_ALGOLIA_APP_ID,
+        apiKey: env.VITE_ALGOLIA_API_KEY,
+        indexName: env.VITE_ALGOLIA_INDEX_NAME,
+      },
+    },
   },
 
   // Build
