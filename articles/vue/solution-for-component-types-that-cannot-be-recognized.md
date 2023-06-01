@@ -27,3 +27,5 @@
 # https://github.com/antfu/unplugin-vue-components/issues/608
 public-hoist-pattern[]="@vue/runtime-core"
 ```
+
+添加后记得重新执行 `pnpm install` 来使配置生效。
