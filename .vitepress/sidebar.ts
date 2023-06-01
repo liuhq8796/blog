@@ -7,8 +7,9 @@ export default [
   'Vue',
   'TS',
   'Vite',
-  'Node',
+  'npm',
   'pnpm',
+  'Node',
   'Nginx',
 ].map<DefaultTheme.SidebarItem>((category) => {
   const items = scanDir(category)
