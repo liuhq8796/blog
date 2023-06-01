@@ -2,7 +2,7 @@
 
 ## 问题描述
 
-截止此文章撰写时，当使用 TS + unplugin-vue-components 插件以及 pnpm 包管理器时，会出现无法识别其自动引入的组件的类型的问题，相关的 issue 有：[components.d.ts it looks does not work](https://github.com/antfu/unplugin-vue-components/issues/608)。
+截止此文章撰写时，当使用 TS + unplugin-vue-components 插件以及 pnpm 包管理器时，会出现 TS 无法识别自动引入组件的类型的问题，相关的 issue 有：[components.d.ts it looks does not work](https://github.com/antfu/unplugin-vue-components/issues/608)。
 
 ## 解决方案
 
