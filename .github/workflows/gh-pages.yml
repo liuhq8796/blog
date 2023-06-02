@@ -39,9 +39,9 @@ jobs:
         env:
           VITE_BASE_URL: /blog/
           VITE_ABOUT_ME_URL: https://liuhq8796.github.io/
-          VITE_ALGOLIA_APP_ID:
-          VITE_ALGOLIA_API_KEY:
-          VITE_ALGOLIA_INDEX_NAME:
+          VITE_ALGOLIA_APP_ID: W1OAEVFZMM
+          VITE_ALGOLIA_API_KEY: 0f4cf1061ffefe24e4f96b3e82b8b476
+          VITE_ALGOLIA_INDEX_NAME: liuhq8796io
         run: pnpm run build --base $VITE_BASE_URL
 
       - name: Deploy
