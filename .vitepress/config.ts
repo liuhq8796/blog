@@ -21,6 +21,7 @@ export default defineConfig({
   title: '学海拾贝',
   titleTemplate: "Lucas Liu's 博客",
   description: "Lucas Liu's 博客",
+  lang: 'zh-CN',
 
   lastUpdated: true,
 
