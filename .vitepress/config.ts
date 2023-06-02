@@ -1,12 +1,19 @@
 import { defineConfig, loadEnv } from 'vitepress'
 import sidebar from './sidebar'
 
-let aboutMeUrl = ''
-
 const env = loadEnv('', process.cwd())
 
-if (process.env.NODE_ENV === 'production') {
-  aboutMeUrl = env.VITE_ABOUT_ME_URL
+let search
+
+if (env.VITE_ALGOLIA_APP_ID && env.VITE_ALGOLIA_API_KEY && env.VITE_ALGOLIA_INDEX_NAME) {
+  search = {
+    provider: 'algolia',
+    options: {
+      appId: env.VITE_ALGOLIA_APP_ID,
+      apiKey: env.VITE_ALGOLIA_API_KEY,
+      indexName: env.VITE_ALGOLIA_INDEX_NAME,
+    },
+  }
 }
 
 // https://vitepress.dev/reference/site-config
@@ -21,7 +28,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '全部文章', link: '/articles/' },
-      { text: '关于我', link: aboutMeUrl, target: '_blank' },
+      { text: '关于我', link: env.VITE_ABOUT_ME_URL, target: '_blank' },
     ],
 
     outlineTitle: '页面导航',
@@ -36,14 +43,7 @@ export default defineConfig({
 
     returnToTopLabel: '回到顶部',
 
-    search: {
-      provider: 'algolia',
-      options: {
-        appId: env.VITE_ALGOLIA_APP_ID,
-        apiKey: env.VITE_ALGOLIA_API_KEY,
-        indexName: env.VITE_ALGOLIA_INDEX_NAME,
-      },
-    },
+    search,
   },
 
   // Build
