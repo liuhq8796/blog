@@ -6,7 +6,7 @@
 
 ## 解决方案
 
-首先要确认的是项目中的 `tsconfig.json` 配置文件中包含了 `components.d.ts` 文件，如下：
+首先要确认的是项目中的 `tsconfig.json` 配置文件中是否包含了 `components.d.ts` 文件，如下：
 
 ```json
 {
