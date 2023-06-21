@@ -1,7 +1,7 @@
 import { scanDir } from './util'
 import type { DefaultTheme } from 'vitepress'
 
-export default ['JS', 'CSS', 'Vue', 'TS', 'Vite', 'Node', 'Nginx'].map<DefaultTheme.SidebarItem>(
+export default ['JS', 'TS', 'CSS', 'Vue', 'Vite', 'Node', 'Nginx'].map<DefaultTheme.SidebarItem>(
   (category) => {
     const items = scanDir(category)
 
