@@ -6,6 +6,10 @@ hero:
   name: 学海拾贝
   text: Lucas Liu's 博客
   tagline: 记录我的学习笔记
+  actions:
+    - theme: brand
+      text: 全部文章
+      link: /articles/
 
 features:
   - title: JavaScript
