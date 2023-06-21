@@ -2,11 +2,11 @@
 
 <!-- @include: ./js/list.md -->
 
+<!-- @include: ./ts/list.md -->
+
 <!-- @include: ./css/list.md -->
 
 <!-- @include: ./vue/list.md -->
-
-<!-- @include: ./ts/list.md -->
 
 <!-- @include: ./vite/list.md -->
 
