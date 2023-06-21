@@ -10,6 +10,9 @@ hero:
     - theme: brand
       text: 全部文章
       link: /articles/
+    - theme: alt
+      text: 在 GitHub 上查看
+      link: https://github.com/liuhq8796/blog
 
 features:
   - title: JavaScript
