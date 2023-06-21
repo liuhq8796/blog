@@ -45,6 +45,10 @@ export default defineConfig({
     returnToTopLabel: '回到顶部',
 
     search,
+
+    footer: {
+      copyright: 'Copyright © 2023-present <a href="https://github.com/liuhq8796">Lucas Liu</a>',
+    },
   },
 
   // Build
