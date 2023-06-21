@@ -7,7 +7,6 @@ export default [
   'Vue',
   'TS',
   'Vite',
-  'npm',
   'pnpm',
   'Node',
   'Nginx',
