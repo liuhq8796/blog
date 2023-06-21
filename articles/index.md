@@ -10,8 +10,6 @@
 
 <!-- @include: ./vite/list.md -->
 
-<!-- @include: ./pnpm/list.md -->
-
 <!-- @include: ./node/list.md -->
 
 <!-- @include: ./nginx/list.md -->
