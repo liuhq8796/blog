@@ -297,3 +297,154 @@ function queueJob(job: () => void) {
 **之所以封装这么多层就是因为，Vue 的响应式本身有很多的横向扩展**，除了响应式的封装，还有只读的拦截、浅层数据的拦截等等，这样，响应式系统本身也变得更加灵活和易于扩展，我们自己在设计公用函数的时候也可以借鉴类似的思路。
 
 现在你就可以在 test.js 中测试一下我们手写的 reactive 的功能了，将其中的 reactive 和effect 函数替换成我们自己实现的函数，然后执行 node test.js，可以看到测试用例执行通过了。
+
+## 另一个选择 ref 函数
+
+有了 track 和 trigger 的逻辑之后，我们用 ref 函数实现就变得非常简单了。
+
+ref 的执行逻辑要比 reactive 要简单一些，不需要使用 Proxy 代理语法，直接使用对象语法的 getter 和 setter 配置，监听 value 属性即可。
+
+看下面的实现，在 ref 函数返回的对象中，对象的 get value 方法，使用 track 函数去收集依赖，set value 方法中使用 trigger 函数去触发函数的执行。
+
+```js
+
+export function ref(val) {
+  if (isRef(val)) {
+    return val
+  }
+  return new RefImpl(val)
+}
+export function isRef(val) {
+  return !!(val && val.__isRef)
+}
+
+// ref就是利用面向对象的getter和setters进行track和trigget
+class RefImpl {
+  constructor(val) {
+    this.__isRef = true
+    this._val = convert(val)
+  }
+  get value() {
+    track(this, 'value')
+    return this._val
+  }
+
+  set value(val) {
+    if (val !== this._val) {
+      this._val = convert(val)
+      trigger(this, 'value')
+    }
+  }
+}
+
+// ref也可以支持复杂数据结构
+function convert(val) {
+  return isObject(val) ? reactive(val) : val
+}
+```
+
+你能很直观地看到，ref 函数实现的相对简单很多，只是利用面向对象的 getter 和 setter 拦截了 value 属性的读写，这也是为什么我们需要操作 ref 对象的 value 属性的原因。
+
+**值得一提的是，ref 也可以包裹复杂的数据结构，内部会直接调用 reactive 来实现**，这也解决了大部分同学对 ref 和 reactive 使用时机的疑惑，现在你可以全部都用 ref 函数，ref 内部会帮你调用 reactive。
+
+## computed
+
+Vue 中的 computed 计算属性也是一种特殊的 effect 函数，我们可以新建 computed.spec.js 来测试 computed 函数的功能，**computed 可以传递一个函数或者对象，实现计算属性的读取和修改**。比如说可以这么用：
+
+```js
+test('test computed', async t => {
+    // computed 基本使用
+    const ret = reactive({ count: 1 })
+    const num = ref(2)
+    const sum = computed(()=>num.value + ret.count)
+    t.is(sum.value, 3)
+
+    ret.count++
+    t.is(sum.value, 4)
+    num.value = 10
+    t.is(sum.value, 12)
+
+    // computed 属性修改
+    const author = ref('Lucas Liu')
+    const course = ref('How to use computed')
+    const title = computed({
+        get() {
+            return author.value + ":" + course.value
+        },
+        set(val) {
+            [author.value, course.value] = val.split(':')
+        }
+    })
+    t.is(title.value, 'Lucas Liu:How to use computed')
+
+    author.value = 'someone'
+    course.value = 'something'
+    t.is(title.value, 'someone:something')
+
+    // 计算属性赋值
+    title.value = 'Lucas Liu:How to use computed'
+    t.is(author.value, 'Lucas Liu')
+    t.is(course.value, 'How to use computed')
+})
+```
+
+怎么实现呢？我们新建 computed 函数，看下面的代码，我们拦截 computed 的 value 属性，并且定制了 effect 的 lazy 和 scheduler 配置，computed 注册的函数就不会直接执行，而是要通过 scheduler 函数中对 _dirty 属性决定是否执行。
+
+```js
+
+export function computed(getterOrOptions) {
+  // getterOrOptions可以是函数，也可以是一个对象，支持get和set
+  // 还记得清单应用里的全选checkbox就是一个对象配置的computed
+  let getter, setter
+  if (typeof getterOrOptions === 'function') {
+    getter = getterOrOptions
+    setter = () => {
+      console.warn('计算属性不能修改')
+    }
+  } else {
+    getter = getterOrOptions.get
+    setter = getterOrOptions.set
+  }
+  return new ComputedRefImpl(getter, setter)
+}
+class ComputedRefImpl {
+  constructor(getter, setter) {
+    this._setter = setter
+    this._val = undefined
+    this._dirty = true
+    // computed就是一个特殊的effect，设置lazy和执行时机
+    this.effect = effect(getter, {
+      lazy: true,
+      scheduler: () => {
+        if (!this._dirty) {
+          this._dirty = true
+          trigger(this, 'value')
+        }
+      },
+    })
+  }
+  get value() {
+    track(this, 'value')
+    if (this._dirty) {
+      this._dirty = false
+      this._val = this.effect()
+    }
+    return this._val
+  }
+  set value(val) {
+    this._setter(val)
+  }
+}
+```
+
+## 总结
+
+最后我们来回顾一下今天学到的内容。通过手写迷你的响应式原型，我们学习了 Vue 中响应式的地位和架构。
+
+响应式的主要功能就是可以把普通的 JavaScript 对象封装成为响应式对象，**在读取数据的时候通过 track 收集函数的依赖关系，把整个对象和 effect 注册函数的依赖关系全部存储在一个依赖图中**。
+
+定义的 dependsMap 是一个巨大的 Map 数据，effect 函数内部读取的数据都会存储在 dependsMap 中，数据在修改的时候，通过查询 dependsMap，获得需要执行的函数，再去执行即可。
+
+dependsMap 中存储的也不是直接存储 effect 中传递的函数，而是包装了一层对象对这个函数的执行实际进行管理，内部可以通过 active 管理执行状态，还可以通过全局变量 shouldTrack 控制监听状态，并且执行的方式也是判断 scheduler 和 run 方法，实现了对性能的提升。
+
+我们在日常项目开发中也可以**借鉴响应式的处理思路，使用通知的机制，来调用具体数据的操作和更新逻辑**，灵活使用 effect、ref、reactive 等函数把常见的操作全部变成响应式数据处理，会极大的提高我们开发的体验和效率。
