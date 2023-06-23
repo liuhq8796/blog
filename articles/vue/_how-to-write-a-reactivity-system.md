@@ -35,8 +35,265 @@ setInterval(() => {
 
 我们先来看一下响应式整体的流程图，上面的代码中我们使用 reactive 把普通的 JavaScript 对象包裹成响应式数据了。
 
-所以，在 effect 中获取 counter.num1 和 counter.num2 的时候，就会触发 counter 的 get 拦截函数；get 函数，会把当前的 effect 函数注册到一个全局的依赖地图中去。这样 counter.num1 在修改的时候，就会触发 set 拦截函数，去依赖地图中找到注册的 effect 函数，然后执行。
+所以，在 effect 中获取 counter.num1 和 counter.num2 的时候，就会触发 counter 的 get 拦截函数；**get 函数，会把当前的 effect 函数注册到一个全局的依赖地图中去**。这样 counter.num1 在修改的时候，**就会触发 set 拦截函数，去依赖地图中找到注册的 effect 函数，然后执行**。
 
 ![响应式整体流程图](./images/how-to-write-a-reactivity-system/reactivity-overall-flowchart.jpg)
 
 具体是怎么实现的呢？我们从第一步把数据包裹成响应式对象开始。先看 reactive 的实现。
+
+## reactive
+
+基于测试先行的开发思想，我们先来写一个测试用例，然后再去实现 reactive 的功能。
+
+我们安装 ava 测试工具，然后在 test.js 中写一个测试用例，使用下面代码测试 reactive 的功能，能够在响应式数据 ret 更新之后，执行 effect 中注册的函数：
+
+```js
+// test.js
+import test from 'ava';
+import { reactive, effect } from '@vue/reactivity'
+
+
+test('test', async t => {
+    const ret = reactive({ num: 0})
+    let val
+    effect(() => {
+        val = ret.num
+    })
+    t.is(val, 0)
+    ret.num++
+    t.is(val, 1)
+    ret.num++
+    t.is(val, 2)
+})
+```
+
+执行 npm run test，可以看到测试用例执行通过了，然后我们就可以开始实现 reactive 了。
+
+之前讲过在 Vue3 中，reactive 是通过 ES6 中的 Proxy 特性实现的属性拦截，所以，在 reactive 函数中我们直接返回 newProxy 即可：
+
+```js
+// reactive.js
+export function reactive(target) {
+  if (typeof target!=='object') {
+    console.warn(`reactive  ${target} 必须是一个对象`);
+    return target
+  }
+
+  return new Proxy(target, mutableHandles);
+}
+```
+
+可以看到，**下一步我们需要实现的就是 Proxy 中的处理方法 mutableHandles**。
+
+这里会把 Proxy 的代理配置抽离出来单独维护，是因为，其实 Vue3 中除了 reactive 还有很多别的函数需要实现，比如只读的响应式数据、浅层代理的响应式数据等，并且 reactive 中针对 ES6 的代理也需要单独的处理。
+
+这里我们只处理 js 中对象的代理设置。
+
+## mutableHandles
+
+好，看回来，我们剖析 mutableHandles。它要做的事就是配置 Proxy 的拦截函数，这里我们只拦截 get 和 set 操作，进入到 baseHandlers.js 文件中。
+
+我们使用 createGetter 和 createSetters 来创建 set 和 get 函数，mutableHandles 就是配置了 set 和 get 的对象返回。
+
+- get 中直接返回读取的数据，这里的 Reflect.get 和 target[key]实现的结果是一致的；并且返回值是对象的话，还会嵌套执行 reactive，并且调用 track 函数收集依赖。
+- set 中调用 trigger 函数，执行 track 收集的依赖。
+
+```js
+// mutableHandles.js
+
+const get = createGetter();
+const set = createSetter();
+
+function createGetter(shallow = false) {
+  return function get(target, key, receiver) {
+    const res = Reflect.get(target, key, receiver)
+    track(target, "get", key)
+    if (isObject(res)) {
+      // 值也是对象的话，需要嵌套调用reactive
+      // res就是target[key]
+      // 浅层代理，不需要嵌套
+      return shallow ? res : reactive(res)
+    }
+    return res
+  }
+}
+
+function createSetter() {
+  return function set(target, key, value, receiver) {
+    const result = Reflect.set(target, key, value, receiver)
+    // 在触发 set 的时候进行触发依赖
+    trigger(target, "set", key)
+    return result
+  }
+}
+export const mutableHandles = {
+  get,
+  set,
+};
+```
+
+我们先看 get 的关键部分，track 函数是怎么完成依赖收集的。
+
+## track
+
+具体写代码之前，把依赖收集和执行的原理我们梳理清楚，看下面的示意图：
+
+![依赖收集和执行的原理](./images/how-to-write-a-reactivity-system/track-and-trigger.jpg)
+
+在 track 函数中，我们可以使用一个巨大的 targetMap 去存储依赖关系。**map 的 key 是我们要代理的 target 对象，值还是一个 depsMap**，存储这每一个 key 依赖的函数，每一个 key 都可以依赖多个 effect。上面的代码执行完成，depsMap 中就有了 num1 和 num2 两个依赖。
+
+而依赖地图的格式，用代码描述如下：
+
+```js
+targetMap = {
+ target： {
+   key1: [回调函数1，回调函数2],
+   key2: [回调函数3，回调函数4],
+ }  ,
+  target1： {
+   key3: [回调函数5]
+ }  
+
+}
+```
+
+好，有了大的设计思路，我们来进行具体的实现，在 reactive 下新建 effect.js。
+
+由于 target 是对象，所以必须得用 map 才可以把 target 作为 key 来管理数据，每次操作之前需要做非空的判断。最终把全局变量 activeEffect 存储在集合之中，至于 activeEffect 是什么，先将它理解为正在执行的 effect 函数就好：
+
+```js
+// effect.js
+const targetMap = new WeakMap()
+
+let activeEffect = null
+
+export function track(target, type, key) {
+
+  // console.log(`触发 track -> target: ${target} type:${type} key:${key}`)
+
+  // 1. 先基于 target 找到对应的 dep
+  // 如果是第一次的话，那么就需要初始化
+  // {
+  //   target1: {//depsmap
+  //     key:[effect1,effect2]
+  //   }
+  // }
+  let depsMap = targetMap.get(target)
+  if (!depsMap) {
+    // 初始化 depsMap 的逻辑
+    // depsMap = new Map()
+    // targetMap.set(target, depsMap)
+    // 上面两行可以简写成下面的
+    targetMap.set(target, (depsMap = new Map()))
+  }
+  let deps = depsMap.get(key)
+  if (!deps) {
+    deps = new Set()
+  }
+  if (!deps.has(activeEffect) && activeEffect) {
+    // 防止重复注册
+    deps.add(activeEffect)
+  }
+  depsMap.set(key, deps)
+}
+```
+
+get 中关键的收集依赖的 track 函数我们已经讲完了，继续看 set 中关键的 trigger 函数。
+
+## trigger
+
+有了上面 targetMap 的实现机制，**trigger 函数实现的思路就是从 targetMap 中，根据 target 和 key 找到对应的依赖函数集合 deps，然后遍历 deps 执行依赖函数**。
+
+看实现的代码：
+
+```js
+export function trigger(target, type, key) {
+  // console.log(`触发 trigger -> target:  type:${type} key:${key}`)
+  // 从targetMap中找到触发的函数，执行他
+  const depsMap = targetMap.get(target)
+  if (!depsMap) {
+    // 没找到依赖
+    return
+  }
+  const deps = depsMap.get(key)
+  if (!deps) {
+    return
+  }
+  deps.forEach((effectFn) => {
+
+    if (effectFn.scheduler) {
+      effectFn.scheduler()
+    } else {
+      effectFn()
+    }
+  })
+  
+}
+```
+
+可以看到执行的是 effect 的 scheduler 或者 run 函数，这是因为我们需要在 effect 函数中把依赖函数进行包装，并对依赖函数的执行时机进行控制，这是一个小的设计点。
+
+## effect
+
+然后我们来实现 effect 函数。
+
+下面的代码中，我们把传递进来的 fn 函数通过 effectFn 函数包裹执行，在 effectFn 函数内部，把函数赋值给全局变量 activeEffect；然后执行 fn() 的时候，就会触发响应式对象的 get 函数，get 函数内部就会把全局变量 activeEffect 所指向的函数，也就是此时正在执行的 effectFn 存储到依赖地图中，完成依赖的收集：
+
+```js
+export function effect(fn, options = {}) {
+  // effect嵌套，通过队列管理
+  const effectFn = () => {
+    try {
+      activeEffect = effectFn
+      //fn执行的时候，内部读取响应式数据的时候，就能在get配置里读取到activeEffect
+      return fn()
+    } finally {
+      activeEffect = null
+    }
+  }
+  if (!options.lazy) {
+    //没有配置lazy 直接执行
+    effectFn()
+  }
+  effectFn.scheduler = options.scheduler // 调度时机 watchEffect 会用到
+  return effectFn
+  
+}
+```
+
+effect 传递的函数，比如可以通过传递 lazy 和 scheduler 来控制函数执行的时机，默认是同步执行。
+
+scheduler 存在的意义就是我们可以手动控制函数执行的时机，方便应对一些性能优化的场景，比如数据在一次交互中可能会被修改很多次，我们不想每次修改都重新执行依次 effect 函数，而是合并最终的状态之后，最后统一修改一次。
+
+scheduler 怎么用你可以看下面的代码，我们使用数组管理传递的执行任务，最后使用 Promise.resolve 只执行最后一次，这也是 Vue 中 watchEffect 函数的大致原理。
+
+```js
+
+const obj = reactive({ count: 1 })
+effect(() => {
+  console.log(obj.count)
+}, {
+  // 指定调度器为 queueJob
+  scheduler: queueJob
+})
+// 调度器实现
+const queue: Function[] = []
+let isFlushing = false
+function queueJob(job: () => void) {
+  if (!isFlushing) {
+    isFlushing = true
+    Promise.resolve().then(() => {
+      let fn
+      while(fn = queue.shift()) {
+        fn()
+      }
+    })
+  }
+}
+```
+
+好了，绕了这么一大圈终于执行完了函数，估计你也看出来了封装了很多层。
+
+**之所以封装这么多层就是因为，Vue 的响应式本身有很多的横向扩展**，除了响应式的封装，还有只读的拦截、浅层数据的拦截等等，这样，响应式系统本身也变得更加灵活和易于扩展，我们自己在设计公用函数的时候也可以借鉴类似的思路。
+
+现在你就可以在 test.js 中测试一下我们手写的 reactive 的功能了，将其中的 reactive 和effect 函数替换成我们自己实现的函数，然后执行 node test.js，可以看到测试用例执行通过了。
