@@ -4,6 +4,8 @@ Vue 最标志性的功能就是其低侵入性的响应式系统。组件状态�
 
 理解的最快方法就是自己动手实现一边，今天我们就来手写一个迷你的响应式系统。
 
+> 与文章配套的例子源码在这里：[an-example-of-how-to-write-a-reactivity-system](https://github.com/liuhq8796/an-example-of-how-to-write-a-reactivity-system)
+
 ## 响应式
 
 根据响应式组件通知效果可以知道，**响应式机制的主要功能就是，可以把普通的 JavaScript 对象封装成为响应式对象，拦截数据的获取和修改操作，实现依赖数据的自动化更新**。
