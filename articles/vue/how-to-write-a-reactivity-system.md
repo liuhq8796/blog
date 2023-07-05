@@ -23,11 +23,11 @@ const { reactive, effect } = require('@vue/reactivity')
 let dummy
 const counter = reactive({ num1: 1, num2: 2 })
 effect(() => {
-    dummy = counter.num1 + counter.num2
-    console.log(dummy)
+  dummy = counter.num1 + counter.num2
+  console.log(dummy)
 })
 setInterval(() => {
-    counter.num2++
+  counter.num2++
 }, 1000)
 ```
 
@@ -51,21 +51,20 @@ setInterval(() => {
 
 ```js
 // test.js
-import test from 'ava';
+import test from 'ava'
 import { reactive, effect } from '@vue/reactivity'
 
-
-test('test', async t => {
-    const ret = reactive({ num: 0})
-    let val
-    effect(() => {
-        val = ret.num
-    })
-    t.is(val, 0)
-    ret.num++
-    t.is(val, 1)
-    ret.num++
-    t.is(val, 2)
+test('test', async (t) => {
+  const ret = reactive({ num: 0 })
+  let val
+  effect(() => {
+    val = ret.num
+  })
+  t.is(val, 0)
+  ret.num++
+  t.is(val, 1)
+  ret.num++
+  t.is(val, 2)
 })
 ```
 
@@ -76,12 +75,12 @@ test('test', async t => {
 ```js
 // reactive.js
 export function reactive(target) {
-  if (typeof target!=='object') {
-    console.warn(`reactive  ${target} 必须是一个对象`);
+  if (typeof target !== 'object') {
+    console.warn(`reactive  ${target} 必须是一个对象`)
     return target
   }
 
-  return new Proxy(target, mutableHandles);
+  return new Proxy(target, mutableHandles)
 }
 ```
 
@@ -103,13 +102,13 @@ export function reactive(target) {
 ```js
 // mutableHandles.js
 
-const get = createGetter();
-const set = createSetter();
+const get = createGetter()
+const set = createSetter()
 
 function createGetter(shallow = false) {
   return function get(target, key, receiver) {
     const res = Reflect.get(target, key, receiver)
-    track(target, "get", key)
+    track(target, 'get', key)
     if (isObject(res)) {
       // 值也是对象的话，需要嵌套调用reactive
       // res就是target[key]
@@ -124,14 +123,14 @@ function createSetter() {
   return function set(target, key, value, receiver) {
     const result = Reflect.set(target, key, value, receiver)
     // 在触发 set 的时候进行触发依赖
-    trigger(target, "set", key)
+    trigger(target, 'set', key)
     return result
   }
 }
 export const mutableHandles = {
   get,
   set,
-};
+}
 ```
 
 我们先看 get 的关键部分，track 函数是怎么完成依赖收集的。
@@ -151,10 +150,10 @@ targetMap = {
  target： {
    key1: [回调函数1，回调函数2],
    key2: [回调函数3，回调函数4],
- }  ,
+ },
   target1： {
    key3: [回调函数5]
- }  
+ }
 
 }
 ```
@@ -170,7 +169,6 @@ const targetMap = new WeakMap()
 let activeEffect = null
 
 export function track(target, type, key) {
-
   // console.log(`触发 track -> target: ${target} type:${type} key:${key}`)
 
   // 1. 先基于 target 找到对应的 dep
@@ -222,14 +220,12 @@ export function trigger(target, type, key) {
     return
   }
   deps.forEach((effectFn) => {
-
     if (effectFn.scheduler) {
       effectFn.scheduler()
     } else {
       effectFn()
     }
   })
-  
 }
 ```
 
@@ -259,7 +255,6 @@ export function effect(fn, options = {}) {
   }
   effectFn.scheduler = options.scheduler // 调度时机 watchEffect 会用到
   return effectFn
-  
 }
 ```
 
@@ -270,14 +265,16 @@ scheduler 存在的意义就是我们可以手动控制函数执行的时机，�
 scheduler 怎么用你可以看下面的代码，我们使用数组管理传递的执行任务，最后使用 Promise.resolve 只执行最后一次，这也是 Vue 中 watchEffect 函数的大致原理。
 
 ```js
-
 const obj = reactive({ count: 1 })
-effect(() => {
-  console.log(obj.count)
-}, {
-  // 指定调度器为 queueJob
-  scheduler: queueJob
-})
+effect(
+  () => {
+    console.log(obj.count)
+  },
+  {
+    // 指定调度器为 queueJob
+    scheduler: queueJob,
+  },
+)
 // 调度器实现
 const queue: Function[] = []
 let isFlushing = false
@@ -286,7 +283,7 @@ function queueJob(job: () => void) {
     isFlushing = true
     Promise.resolve().then(() => {
       let fn
-      while(fn = queue.shift()) {
+      while ((fn = queue.shift())) {
         fn()
       }
     })
@@ -298,7 +295,7 @@ function queueJob(job: () => void) {
 
 **之所以封装这么多层就是因为，Vue 的响应式本身有很多的横向扩展**，除了响应式的封装，还有只读的拦截、浅层数据的拦截等等，这样，响应式系统本身也变得更加灵活和易于扩展，我们自己在设计公用函数的时候也可以借鉴类似的思路。
 
-现在你就可以在 test.js 中测试一下我们手写的 reactive 的功能了，将其中的 reactive 和effect 函数替换成我们自己实现的函数，然后执行 node test.js，可以看到测试用例执行通过了。
+现在你就可以在 test.js 中测试一下我们手写的 reactive 的功能了，将其中的 reactive 和 effect 函数替换成我们自己实现的函数，然后执行 node test.js，可以看到测试用例执行通过了。
 
 ## 另一个选择 ref 函数
 
@@ -309,7 +306,6 @@ ref 的执行逻辑要比 reactive 要简单一些，不需要使用 Proxy 代�
 看下面的实现，在 ref 函数返回的对象中，对象的 get value 方法，使用 track 函数去收集依赖，set value 方法中使用 trigger 函数去触发函数的执行。
 
 ```js
-
 export function ref(val) {
   if (isRef(val)) {
     return val
@@ -354,46 +350,45 @@ function convert(val) {
 Vue 中的 computed 计算属性也是一种特殊的 effect 函数，我们可以新建 computed.spec.js 来测试 computed 函数的功能，**computed 可以传递一个函数或者对象，实现计算属性的读取和修改**。比如说可以这么用：
 
 ```js
-test('test computed', async t => {
-    // computed 基本使用
-    const ret = reactive({ count: 1 })
-    const num = ref(2)
-    const sum = computed(()=>num.value + ret.count)
-    t.is(sum.value, 3)
+test('test computed', async (t) => {
+  // computed 基本使用
+  const ret = reactive({ count: 1 })
+  const num = ref(2)
+  const sum = computed(() => num.value + ret.count)
+  t.is(sum.value, 3)
 
-    ret.count++
-    t.is(sum.value, 4)
-    num.value = 10
-    t.is(sum.value, 12)
+  ret.count++
+  t.is(sum.value, 4)
+  num.value = 10
+  t.is(sum.value, 12)
 
-    // computed 属性修改
-    const author = ref('Lucas Liu')
-    const course = ref('How to use computed')
-    const title = computed({
-        get() {
-            return author.value + ":" + course.value
-        },
-        set(val) {
-            [author.value, course.value] = val.split(':')
-        }
-    })
-    t.is(title.value, 'Lucas Liu:How to use computed')
+  // computed 属性修改
+  const author = ref('Lucas Liu')
+  const course = ref('How to use computed')
+  const title = computed({
+    get() {
+      return author.value + ':' + course.value
+    },
+    set(val) {
+      ;[author.value, course.value] = val.split(':')
+    },
+  })
+  t.is(title.value, 'Lucas Liu:How to use computed')
 
-    author.value = 'someone'
-    course.value = 'something'
-    t.is(title.value, 'someone:something')
+  author.value = 'someone'
+  course.value = 'something'
+  t.is(title.value, 'someone:something')
 
-    // 计算属性赋值
-    title.value = 'Lucas Liu:How to use computed'
-    t.is(author.value, 'Lucas Liu')
-    t.is(course.value, 'How to use computed')
+  // 计算属性赋值
+  title.value = 'Lucas Liu:How to use computed'
+  t.is(author.value, 'Lucas Liu')
+  t.is(course.value, 'How to use computed')
 })
 ```
 
-怎么实现呢？我们新建 computed 函数，看下面的代码，我们拦截 computed 的 value 属性，并且定制了 effect 的 lazy 和 scheduler 配置，computed 注册的函数就不会直接执行，而是要通过 scheduler 函数中对 _dirty 属性决定是否执行。
+怎么实现呢？我们新建 computed 函数，看下面的代码，我们拦截 computed 的 value 属性，并且定制了 effect 的 lazy 和 scheduler 配置，computed 注册的函数就不会直接执行，而是要通过 scheduler 函数中对 \_dirty 属性决定是否执行。
 
 ```js
-
 export function computed(getterOrOptions) {
   // getterOrOptions可以是函数，也可以是一个对象，支持get和set
   // 还记得清单应用里的全选checkbox就是一个对象配置的computed

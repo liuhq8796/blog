@@ -18,12 +18,12 @@
 
 ```js
 class Node {
-    value; // 存储当前节点的值
-    next; // 存储下一个节点的引用
+  value // 存储当前节点的值
+  next // 存储下一个节点的引用
 
-    constructor(value) {
-        this.value = value;
-    }
+  constructor(value) {
+    this.value = value
+  }
 }
 ```
 
@@ -31,28 +31,28 @@ class Node {
 
 ```js
 export default class Queue {
-    #head; // 存储队列的头节点
-    #tail; // 存储队列的尾节点
-    #size; // 当前队列元素的个数
+  #head // 存储队列的头节点
+  #tail // 存储队列的尾节点
+  #size // 当前队列元素的个数
 
-    constructor() {
-        this.clear();
-    }
+  constructor() {
+    this.clear()
+  }
 
-    // 入队
-    enqueue(val) {}
+  // 入队
+  enqueue(val) {}
 
-    // 出队
-    dequeue() {}
+  // 出队
+  dequeue() {}
 
-    // 清空
-    clear() {}
+  // 清空
+  clear() {}
 
-    // 获取队列的长度
-    get size() {}
+  // 获取队列的长度
+  get size() {}
 
-    // 实现队列的遍历
-    *[Symbol.iterator]() {}
+  // 实现队列的遍历
+  *[Symbol.iterator]() {}
 }
 ```
 
@@ -138,10 +138,10 @@ Symbol.iterator 为每一个对象定义了默认的迭代器。该迭代器可�
 举个例子：
 
 ```js
-const queue = new Queue();
-queue.enqueue(1);
-queue.enqueue(2);
-console.log([...queue]); // [1, 2]
+const queue = new Queue()
+queue.enqueue(1)
+queue.enqueue(2)
+console.log([...queue]) // [1, 2]
 ```
 
 ### 测试一下
@@ -149,64 +149,64 @@ console.log([...queue]); // [1, 2]
 yocto-queue 使用了 ava 测试工具，可以在 `test.js` 中进行测试。
 
 ```js
-import test from 'ava';
-import Queue from './index.js';
+import test from 'ava'
+import Queue from './index.js'
 
 test('.enqueue()', (t) => {
-    const queue = new Queue();
-    queue.enqueue('🦄');
-    t.is(queue.dequeue(), '🦄');
-    queue.enqueue('🌈');
-    queue.enqueue('❤️');
-    t.is(queue.dequeue(), '🌈');
-    t.is(queue.dequeue(), '❤️');
-});
+  const queue = new Queue()
+  queue.enqueue('🦄')
+  t.is(queue.dequeue(), '🦄')
+  queue.enqueue('🌈')
+  queue.enqueue('❤️')
+  t.is(queue.dequeue(), '🌈')
+  t.is(queue.dequeue(), '❤️')
+})
 
 test('.dequeue()', (t) => {
-    const queue = new Queue();
-    t.is(queue.dequeue(), undefined);
-    t.is(queue.dequeue(), undefined);
-    queue.enqueue('🦄');
-    t.is(queue.dequeue(), '🦄');
-    t.is(queue.dequeue(), undefined);
-});
+  const queue = new Queue()
+  t.is(queue.dequeue(), undefined)
+  t.is(queue.dequeue(), undefined)
+  queue.enqueue('🦄')
+  t.is(queue.dequeue(), '🦄')
+  t.is(queue.dequeue(), undefined)
+})
 
 test('.clear()', (t) => {
-    const queue = new Queue();
-    queue.clear();
-    queue.enqueue(1);
-    queue.clear();
-    t.is(queue.size, 0);
-    queue.enqueue(1);
-    queue.enqueue(2);
-    queue.enqueue(3);
-    queue.clear();
-    t.is(queue.size, 0);
-});
+  const queue = new Queue()
+  queue.clear()
+  queue.enqueue(1)
+  queue.clear()
+  t.is(queue.size, 0)
+  queue.enqueue(1)
+  queue.enqueue(2)
+  queue.enqueue(3)
+  queue.clear()
+  t.is(queue.size, 0)
+})
 
 test('.size', (t) => {
-    const queue = new Queue();
-    t.is(queue.size, 0);
-    queue.clear();
-    t.is(queue.size, 0);
-    queue.enqueue('🦄');
-    t.is(queue.size, 1);
-    queue.enqueue('🦄');
-    t.is(queue.size, 2);
-    queue.dequeue();
-    t.is(queue.size, 1);
-    queue.dequeue();
-    t.is(queue.size, 0);
-    queue.dequeue();
-    t.is(queue.size, 0);
-});
+  const queue = new Queue()
+  t.is(queue.size, 0)
+  queue.clear()
+  t.is(queue.size, 0)
+  queue.enqueue('🦄')
+  t.is(queue.size, 1)
+  queue.enqueue('🦄')
+  t.is(queue.size, 2)
+  queue.dequeue()
+  t.is(queue.size, 1)
+  queue.dequeue()
+  t.is(queue.size, 0)
+  queue.dequeue()
+  t.is(queue.size, 0)
+})
 
 test('iterable', (t) => {
-    const queue = new Queue();
-    queue.enqueue('🦄');
-    queue.enqueue('🌈');
-    t.deepEqual([...queue], ['🦄', '🌈']);
-});
+  const queue = new Queue()
+  queue.enqueue('🦄')
+  queue.enqueue('🌈')
+  t.deepEqual([...queue], ['🦄', '🌈'])
+})
 ```
 
 ## 总结
