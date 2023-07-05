@@ -1,15 +1,15 @@
 # 文章目录
 
-<!-- @include: ./js/list.md -->
+<!-- @include: ./js/index.md{3,} -->
 
-<!-- @include: ./ts/list.md -->
+<!-- @include: ./ts/index.md{3,} -->
 
-<!-- @include: ./css/list.md -->
+<!-- @include: ./css/index.md{3,} -->
 
-<!-- @include: ./vue/list.md -->
+<!-- @include: ./vue/index.md{3,} -->
 
-<!-- @include: ./vite/list.md -->
+<!-- @include: ./vite/index.md{3,} -->
 
-<!-- @include: ./node/list.md -->
+<!-- @include: ./node/index.md{3,} -->
 
-<!-- @include: ./nginx/list.md -->
+<!-- @include: ./nginx/index.md{3,} -->
