@@ -19,11 +19,9 @@ import prompts from 'prompts'
 
   mkdirSync(`./articles/${category}`, { recursive: true })
 
-  writeFileSync(`./articles/${category}/index.md`, '# 文章目录\n\n <!-- @include: ./list.md -->\n')
+  writeFileSync(`./articles/${category}/index.md`, `# 文章目录\n\n## ${categoryRow}\n`)
 
-  writeFileSync(`./articles/${category}/list.md`, `## ${categoryRow}\n`)
-
-  const newIndex = `\n<!-- @include: ./${category}/list.md -->\n`
+  const newIndex = `\n<!-- @include: ./${category}/index.md{3,} -->\n`
 
   appendFileSync('./articles/index.md', newIndex)
 })()
