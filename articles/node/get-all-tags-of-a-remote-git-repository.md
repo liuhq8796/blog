@@ -9,9 +9,9 @@
 ## 用法
 
 ```js
-import remoteGitTags from 'remote-git-tags';
+import remoteGitTags from 'remote-git-tags'
 
-console.log(await remoteGitTags('https://github.com/sindresorhus/remote-git-tags'));
+console.log(await remoteGitTags('https://github.com/sindresorhus/remote-git-tags'))
 //=> Map {'v1.0.0' => '69e308412e2a5cffa692951f0274091ef23e0e32', …}
 ```
 
@@ -34,23 +34,23 @@ console.log(await remoteGitTags('https://github.com/sindresorhus/remote-git-tags
 ```json
 // package.json
 {
-    // 指定 Node 以什么模块加载，缺省时默认是 commonjs
-    "type": "module",
-    // 公开包模块，作为 "main" 字段的替代
-    "exports": "./index.js",
-    // 指定 nodejs 的版本
-    "engines": {
-        "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
-    },
-    "scripts": {
-        "test": "xo && ava"
-    }
+  // 指定 Node 以什么模块加载，缺省时默认是 commonjs
+  "type": "module",
+  // 公开包模块，作为 "main" 字段的替代
+  "exports": "./index.js",
+  // 指定 nodejs 的版本
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "scripts": {
+    "test": "xo && ava"
+  }
 }
 ```
 
--   [`"type"`](https://nodejs.org/api/packages.html#type) 字段定义了 `Node.js` 用于以该 `package.json` 文件作为最近父级的所有 `.js` 文件的模块格式。
--   [`"exports"`](https://nodejs.org/api/packages.html#exports) 字段提供了一种方法来为不同环境和 javascript 风格公开包模块，`Node.js` 12+ 支持它作为 [`"main"`](https://nodejs.org/api/packages.html#main) 的替代方案。
--   [`"engines"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#engines) 字段可以指定运行该包模块所需的 `Node.js` 版本(这里最低版本定为 12+ 应该是为了让 `Node.js` 能够识别 `exports` 字段)以及能够正确安装该包模块的 `npm` 版本。
+- [`"type"`](https://nodejs.org/api/packages.html#type) 字段定义了 `Node.js` 用于以该 `package.json` 文件作为最近父级的所有 `.js` 文件的模块格式。
+- [`"exports"`](https://nodejs.org/api/packages.html#exports) 字段提供了一种方法来为不同环境和 javascript 风格公开包模块，`Node.js` 12+ 支持它作为 [`"main"`](https://nodejs.org/api/packages.html#main) 的替代方案。
+- [`"engines"`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#engines) 字段可以指定运行该包模块所需的 `Node.js` 版本(这里最低版本定为 12+ 应该是为了让 `Node.js` 能够识别 `exports` 字段)以及能够正确安装该包模块的 `npm` 版本。
 
 知周所众，`Node` 曾经是 `CommonJs` 模块机制，`Node 13` 添加了对标准 `ES6` 模块的支持。对于以 `.js` 结尾的文件，默认是 `CommonJs` 模块，但如果同级目录及所有父目录有 `package.json` 文件，且 `type` 属性为 module，则会被视为 `ES6` 模块。`type` 值为 `commonjs` 或者为空或者没有 `package.json` 文件，都是默认 `CommonJs` 模块加载。
 
@@ -62,27 +62,27 @@ console.log(await remoteGitTags('https://github.com/sindresorhus/remote-git-tags
 
 ```js
 // index.js
-import { promisify } from 'node:util';
-import childProcess from 'node:child_process';
+import { promisify } from 'node:util'
+import childProcess from 'node:child_process'
 
-const execFile = promisify(childProcess.execFile);
+const execFile = promisify(childProcess.execFile)
 
 export default async function remoteGitTags(repoUrl) {
-    const { stdout } = await execFile('git', ['ls-remote', '--tags', repoUrl]);
-    const tags = new Map();
+  const { stdout } = await execFile('git', ['ls-remote', '--tags', repoUrl])
+  const tags = new Map()
 
-    for (const line of stdout.trim().split('\n')) {
-        const [hash, tagReference] = line.split('\t');
+  for (const line of stdout.trim().split('\n')) {
+    const [hash, tagReference] = line.split('\t')
 
-        // Strip off the indicator of dereferenced tags so we can override the
-        // previous entry which points at the tag hash and not the commit hash
-        // `refs/tags/v9.6.0^{}` → `v9.6.0`
-        const tagName = tagReference.replace(/^refs\/tags\//, '').replace(/\^{}$/, '');
+    // Strip off the indicator of dereferenced tags so we can override the
+    // previous entry which points at the tag hash and not the commit hash
+    // `refs/tags/v9.6.0^{}` → `v9.6.0`
+    const tagName = tagReference.replace(/^refs\/tags\//, '').replace(/\^{}$/, '')
 
-        tags.set(tagName, hash);
-    }
+    tags.set(tagName, hash)
+  }
 
-    return tags;
+  return tags
 }
 ```
 
@@ -105,7 +105,7 @@ export default async function remoteGitTags(repoUrl) {
 源码的第三行：
 
 ```js
-const execFile = promisify(childProcess.execFile);
+const execFile = promisify(childProcess.execFile)
 ```
 
 这里有我们的重头戏 `promisify`，它是一个函数，作用是将一个 `callback` 形式的函数转换成一个 `Promise` 形式的函数。
@@ -115,64 +115,64 @@ const execFile = promisify(childProcess.execFile);
 #### promisify 源码
 
 ```js
-const kCustomPromisifiedSymbol = SymbolFor('nodejs.util.promisify.custom');
-const kCustomPromisifyArgsSymbol = Symbol('customPromisifyArgs');
+const kCustomPromisifiedSymbol = SymbolFor('nodejs.util.promisify.custom')
+const kCustomPromisifyArgsSymbol = Symbol('customPromisifyArgs')
 
-let validateFunction;
+let validateFunction
 
 function promisify(original) {
-    // Lazy-load to avoid a circular dependency.
-    if (validateFunction === undefined) ({ validateFunction } = require('internal/validators'));
+  // Lazy-load to avoid a circular dependency.
+  if (validateFunction === undefined) ({ validateFunction } = require('internal/validators'))
 
-    validateFunction(original, 'original');
+  validateFunction(original, 'original')
 
-    if (original[kCustomPromisifiedSymbol]) {
-        const fn = original[kCustomPromisifiedSymbol];
+  if (original[kCustomPromisifiedSymbol]) {
+    const fn = original[kCustomPromisifiedSymbol]
 
-        validateFunction(fn, 'util.promisify.custom');
+    validateFunction(fn, 'util.promisify.custom')
 
-        return ObjectDefineProperty(fn, kCustomPromisifiedSymbol, {
-            value: fn,
-            enumerable: false,
-            writable: false,
-            configurable: true,
-        });
-    }
+    return ObjectDefineProperty(fn, kCustomPromisifiedSymbol, {
+      value: fn,
+      enumerable: false,
+      writable: false,
+      configurable: true,
+    })
+  }
 
-    // Names to create an object from in case the callback receives multiple
-    // arguments, e.g. ['bytesRead', 'buffer'] for fs.read.
-    const argumentNames = original[kCustomPromisifyArgsSymbol];
+  // Names to create an object from in case the callback receives multiple
+  // arguments, e.g. ['bytesRead', 'buffer'] for fs.read.
+  const argumentNames = original[kCustomPromisifyArgsSymbol]
 
-    function fn(...args) {
-        return new Promise((resolve, reject) => {
-            ArrayPrototypePush(args, (err, ...values) => {
-                if (err) {
-                    return reject(err);
-                }
-                if (argumentNames !== undefined && values.length > 1) {
-                    const obj = {};
-                    for (let i = 0; i < argumentNames.length; i++) obj[argumentNames[i]] = values[i];
-                    resolve(obj);
-                } else {
-                    resolve(values[0]);
-                }
-            });
-            ReflectApply(original, this, args);
-        });
-    }
+  function fn(...args) {
+    return new Promise((resolve, reject) => {
+      ArrayPrototypePush(args, (err, ...values) => {
+        if (err) {
+          return reject(err)
+        }
+        if (argumentNames !== undefined && values.length > 1) {
+          const obj = {}
+          for (let i = 0; i < argumentNames.length; i++) obj[argumentNames[i]] = values[i]
+          resolve(obj)
+        } else {
+          resolve(values[0])
+        }
+      })
+      ReflectApply(original, this, args)
+    })
+  }
 
-    ObjectSetPrototypeOf(fn, ObjectGetPrototypeOf(original));
+  ObjectSetPrototypeOf(fn, ObjectGetPrototypeOf(original))
 
-    ObjectDefineProperty(fn, kCustomPromisifiedSymbol, {
-        value: fn,
-        enumerable: false,
-        writable: false,
-        configurable: true,
-    });
-    return ObjectDefineProperties(fn, ObjectGetOwnPropertyDescriptors(original));
+  ObjectDefineProperty(fn, kCustomPromisifiedSymbol, {
+    value: fn,
+    enumerable: false,
+    writable: false,
+    configurable: true,
+  })
+  return ObjectDefineProperties(fn, ObjectGetOwnPropertyDescriptors(original))
 }
 
-promisify.custom = kCustomPromisifiedSymbol;
+promisify.custom = kCustomPromisifiedSymbol
 ```
 
 promisify 的源码牵扯了许多其他模块，一时间可能难以看懂，所以我们就参考源码提取出一些关键部分，做一个简版的实现。
@@ -180,44 +180,44 @@ promisify 的源码牵扯了许多其他模块，一时间可能难以看懂，�
 #### 简单实现
 
 ```js
-const imageSrc = 'https://www.pexels.com/zh-cn/photo/1034662/';
+const imageSrc = 'https://www.pexels.com/zh-cn/photo/1034662/'
 
 function loadImage(src, callback) {
-    const image = document.createElement('img');
-    image.src = src;
-    image.alt = '城市图片';
-    image.style = 'width: 350px;height: 440px';
-    image.onload = () => callback(null, image);
-    image.onerror = () => callback(new Error('加载失败'));
-    document.body.append(image);
+  const image = document.createElement('img')
+  image.src = src
+  image.alt = '城市图片'
+  image.style = 'width: 350px;height: 440px'
+  image.onload = () => callback(null, image)
+  image.onerror = () => callback(new Error('加载失败'))
+  document.body.append(image)
 }
 
 function promisify(original) {
-    function fn(...args) {
-        return new Promise((resolve, reject) => {
-            args.push((err, ...values) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(values);
-            });
-            // original.apply(this, args);
-            Reflect.apply(original, this, args);
-        });
-    }
-    return fn;
+  function fn(...args) {
+    return new Promise((resolve, reject) => {
+      args.push((err, ...values) => {
+        if (err) {
+          return reject(err)
+        }
+        resolve(values)
+      })
+      // original.apply(this, args);
+      Reflect.apply(original, this, args)
+    })
+  }
+  return fn
 }
 
-const loadImagePromise = promisify(loadImage);
+const loadImagePromise = promisify(loadImage)
 async function load() {
-    try {
-        const res = await loadImagePromise(imageSrc);
-        console.log(res);
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    const res = await loadImagePromise(imageSrc)
+    console.log(res)
+  } catch (err) {
+    console.log(err)
+  }
 }
-load();
+load()
 ```
 
 简化后的代码就显得简单易懂了，虽然返回值和原版还有差别，但作为实现 promisify 的例子它已经足够了。

@@ -9,8 +9,8 @@
 ## 用法
 
 ```js
-var omit = require('omit.js');
-omit({ name: 'Benjy', age: 18 }, ['name']); // => { age: 18 }
+var omit = require('omit.js')
+omit({ name: 'Benjy', age: 18 }, ['name']) // => { age: 18 }
 ```
 
 用途极其简单，只是剔除对象中的某些属性，返回剔除后的对象。不过值得注意的是，omit 方法并不会修改原对象，而是做了一层浅拷贝之后再在拷贝的对象上进行剔除并返回。
@@ -23,16 +23,16 @@ omit({ name: 'Benjy', age: 18 }, ['name']); // => { age: 18 }
 
 ```js
 function omit(obj, fields) {
-    // eslint-disable-next-line prefer-object-spread
-    const shallowCopy = Object.assign({}, obj);
-    for (let i = 0; i < fields.length; i += 1) {
-        const key = fields[i];
-        delete shallowCopy[key];
-    }
-    return shallowCopy;
+  // eslint-disable-next-line prefer-object-spread
+  const shallowCopy = Object.assign({}, obj)
+  for (let i = 0; i < fields.length; i += 1) {
+    const key = fields[i]
+    delete shallowCopy[key]
+  }
+  return shallowCopy
 }
 
-export default omit;
+export default omit
 ```
 
 用 Object.assign 做浅拷贝，然后再用 for 循环删除指定的属性，解读完毕。
@@ -40,27 +40,27 @@ export default omit;
 ### 测试文件
 
 ```js
-import assert from 'assert';
-import omit from '../src';
+import assert from 'assert'
+import omit from '../src'
 
 describe('omit', () => {
-    it('should create a shallow copy', () => {
-        // 定义对象
-        const benjy = { name: 'Benjy' };
-        // 不做剔除仅接收返回对象
-        const copy = omit(benjy, []);
-        // 确认两个对象内部的属性是否相同 copy.name === benjy.name
-        assert.deepEqual(copy, benjy);
-        // 确认两个对象不相等 copy !== benjy
-        assert.notEqual(copy, benjy);
-    });
+  it('should create a shallow copy', () => {
+    // 定义对象
+    const benjy = { name: 'Benjy' }
+    // 不做剔除仅接收返回对象
+    const copy = omit(benjy, [])
+    // 确认两个对象内部的属性是否相同 copy.name === benjy.name
+    assert.deepEqual(copy, benjy)
+    // 确认两个对象不相等 copy !== benjy
+    assert.notEqual(copy, benjy)
+  })
 
-    it('should drop fields which are passed in', () => {
-        const benjy = { name: 'Benjy', age: 18 };
-        assert.deepEqual(omit(benjy, ['age']), { name: 'Benjy' });
-        assert.deepEqual(omit(benjy, ['name', 'age']), {});
-    });
-});
+  it('should drop fields which are passed in', () => {
+    const benjy = { name: 'Benjy', age: 18 }
+    assert.deepEqual(omit(benjy, ['age']), { name: 'Benjy' })
+    assert.deepEqual(omit(benjy, ['name', 'age']), {})
+  })
+})
 ```
 
 两端测试的目的也很明确，第一段测试用例是测试源对象是否被拷贝，第二段测试用例是测试剔除的属性是否被剔除。

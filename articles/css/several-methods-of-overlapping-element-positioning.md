@@ -17,25 +17,25 @@
 
 ```html
 <figure>
-    <img src="./night-sky.jpg">
-    <figcaption>Trees against purple night sky</figcaption>
+  <img src="./night-sky.jpg" />
+  <figcaption>Trees against purple night sky</figcaption>
 </figure>
 ```
 
 ```css
 figure {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 figcaption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #0009;
-    color: white;
-    text-align: center;
-    line-height: 2;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #0009;
+  color: white;
+  text-align: center;
+  line-height: 2;
 }
 ```
 
@@ -45,23 +45,23 @@ figcaption {
 
 ```html
 <figure>
-    <img src="./night-sky.jpg">
-    <figcaption>Trees against purple night sky</figcaption>
+  <img src="./night-sky.jpg" />
+  <figcaption>Trees against purple night sky</figcaption>
 </figure>
 ```
 
 ```css
 figure {
-    display: inline-block;
+  display: inline-block;
 }
 figcaption {
-    background-color: #0009;
-    color: white;
-    text-align: center;
-    line-height: 2;
-    margin-top: -2rem;
-    /* 背景层叠顺序较低 */
-    position: relative;
+  background-color: #0009;
+  color: white;
+  text-align: center;
+  line-height: 2;
+  margin-top: -2rem;
+  /* 背景层叠顺序较低 */
+  position: relative;
 }
 ```
 
@@ -73,26 +73,26 @@ figcaption {
 
 ```html
 <figure>
-    <img src="./night-sky.jpg">
-    <figcaption>Trees against purple night sky</figcaption>
+  <img src="./night-sky.jpg" />
+  <figcaption>Trees against purple night sky</figcaption>
 </figure>
 ```
 
 ```css
 figure {
-    display: inline-grid;
+  display: inline-grid;
 }
 figure > img,
 figure > figcaption {
-    /* 还可以简写为 grid-area: 1 / 2 */
-    grid-area: 1 / 1 / 2 / 2;
+  /* 还可以简写为 grid-area: 1 / 2 */
+  grid-area: 1 / 1 / 2 / 2;
 }
 figcaption {
-    align-self: end;
-    text-align: center;
-    background-color: #0009;
-    color: white;
-    line-height: 2;
+  align-self: end;
+  text-align: center;
+  background-color: #0009;
+  color: white;
+  line-height: 2;
 }
 ```
 
@@ -104,13 +104,13 @@ grid 子项都占用同一个网格就会重叠
 
 - 控制方便
 
-    比如说我希望黑色蒙层覆盖整个图片，我们设置为 align-self: stretch，就可以了。
+  比如说我希望黑色蒙层覆盖整个图片，我们设置为 align-self: stretch，就可以了。
 
-    ```css
-    figcaption {
-        align-self: stretch;
-    }
-    ```
+  ```css
+  figcaption {
+    align-self: stretch;
+  }
+  ```
 
     <figure :class="$style.figure1">
         <img :class="$style.img1" src="./images/several-methods-of-overlapping-element-positioning/ryan-hutton-Jztmx9yqjBw-unsplash.jpg">
@@ -119,7 +119,7 @@ grid 子项都占用同一个网格就会重叠
 
 - 层叠上下文关系和包含块关系没有变化
 
-    第二个优点是相比于之前的绝对定位，其容器元素的层叠上下文关系和包含块关系是没有任何变化的，在某些场景下这个就特别的适用。
+  第二个优点是相比于之前的绝对定位，其容器元素的层叠上下文关系和包含块关系是没有任何变化的，在某些场景下这个就特别的适用。
 
 ## container 方法
 
@@ -129,26 +129,26 @@ grid 子项都占用同一个网格就会重叠
 
 ```html
 <figure>
-    <span><img src="./night-sky.jpg"></span>
-    <figcaption>Trees against purple night sky</figcaption>
+  <span><img src="./night-sky.jpg" /></span>
+  <figcaption>Trees against purple night sky</figcaption>
 </figure>
 ```
 
 ```css
 figure {
-    display: inline-flex;
+  display: inline-flex;
 }
 figure > span {
-    container-type: inline-size;
+  container-type: inline-size;
 }
 figcaption {
-    width: 256px;
-    align-self: end;
-    text-align: center;
-    background-color: #0009;
-    color: white;
-    line-height: 2;
-    z-index: 1;
+  width: 256px;
+  align-self: end;
+  text-align: center;
+  background-color: #0009;
+  color: white;
+  line-height: 2;
+  z-index: 1;
 }
 ```
 
@@ -156,11 +156,11 @@ figcaption {
 
 ### 原理
 
-所有具有尺寸收缩特性的元素，设置为容器元素后，其宽度尺寸都会变为0。
+所有具有尺寸收缩特性的元素，设置为容器元素后，其宽度尺寸都会变为 0。
 
-例如任意 display 是 inline-* 的元素，浮动元素，绝对定位元素，flex 子项，或 width: fit-content 元素等。
+例如任意 display 是 inline-\* 的元素，浮动元素，绝对定位元素，flex 子项，或 width: fit-content 元素等。
 
-凡是满足这样条件的元素，设置 container-type 为 inline-size 后，那宽度都是0。我们利用了这个特性，实现了重叠效果。
+凡是满足这样条件的元素，设置 container-type 为 inline-size 后，那宽度都是 0。我们利用了这个特性，实现了重叠效果。
 
 ## 总结
 
