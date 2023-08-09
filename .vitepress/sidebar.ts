@@ -1,15 +1,48 @@
 import { scanDir } from './util'
 import type { DefaultTheme } from 'vitepress'
 
-export default ['JS', 'TS', 'CSS', 'Vue', 'Vite', 'Node', 'Nginx'].map<DefaultTheme.SidebarItem>(
-  (category) => {
-    const items = scanDir(category)
-
-    return {
-      text: category,
-      link: `/articles/${category.toLowerCase()}/`,
-      items,
-      collapsed: true,
-    }
+const categories = [
+  {
+    label: 'JS',
+    link: '/articles/js/',
   },
-)
+  {
+    label: 'TS',
+    link: '/articles/ts/',
+  },
+  {
+    label: 'CSS',
+    link: '/articles/css/',
+  },
+  {
+    label: 'Vue',
+    link: '/articles/vue/',
+  },
+  {
+    label: 'Vite',
+    link: '/articles/vite/',
+  },
+  {
+    label: 'Node',
+    link: '/articles/node/',
+  },
+  {
+    label: 'Nginx',
+    link: '/articles/nginx/',
+  },
+  {
+    label: '工程化设计',
+    link: '/articles/engineering-design/',
+  },
+]
+
+export default categories.map<DefaultTheme.SidebarItem>((category) => {
+  const items = scanDir(category.link)
+
+  return {
+    text: category.label,
+    link: category.link,
+    items,
+    collapsed: true,
+  }
+})

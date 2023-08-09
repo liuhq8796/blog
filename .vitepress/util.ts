@@ -2,8 +2,8 @@ import { readdirSync, statSync, readFileSync } from 'fs'
 import { join } from 'path'
 import type { DefaultTheme } from 'vitepress'
 
-export const scanDir = (dir: string): DefaultTheme.SidebarItem[] => {
-  const dirPath = join(__dirname, '../articles', dir.toLowerCase())
+export const scanDir = (url: string): DefaultTheme.SidebarItem[] => {
+  const dirPath = join(__dirname, '../', url)
 
   const files = readdirSync(dirPath).filter(
     (file) =>
@@ -19,8 +19,8 @@ export const scanDir = (dir: string): DefaultTheme.SidebarItem[] => {
     if (stat.isDirectory()) {
       return {
         text: file,
-        link: `/articles/${dir.toLowerCase()}/${file.toLowerCase()}/`,
-        items: scanDir(`${dir}/${file}`),
+        link: `${url}${file.toLowerCase()}/`,
+        items: scanDir(`${url}/${file}`),
       }
     }
 
@@ -29,7 +29,7 @@ export const scanDir = (dir: string): DefaultTheme.SidebarItem[] => {
 
     return {
       text: title,
-      link: `/articles/${dir.toLowerCase()}/${file.replace(/\.md$/, '')}`,
+      link: `${url}${file.replace(/\.md$/, '')}`,
     }
   })
 }
