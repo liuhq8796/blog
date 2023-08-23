@@ -48,7 +48,7 @@ docs@1.0.<span class="text-green-400">1</span> --> components@1.0.<span class="t
 
 再举几个案例项目：
 
-- [Vue 3](<[https://](https://github.com/vuejs/core/tree/main/packages)>)
+- [Vue 3](https://github.com/vuejs/core/tree/main/packages)
 - [Element Plus](https://github.com/element-plus/element-plus/tree/dev/packages)
 - [UnoCSS](https://github.com/unocss/unocss/tree/main/packages)
 
