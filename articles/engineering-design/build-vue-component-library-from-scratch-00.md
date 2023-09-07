@@ -6,8 +6,8 @@
 
 本系列文章将会从零开始搭建一个 Vue 组件库，主要包括以下内容：
 
-- [x] 01.搭建 Monorepo 项目结构
-- [ ] 02.使用 Vite 搭建开发环境
+- [x] [01.搭建 Monorepo 项目结构](/articles/engineering-design/build-vue-component-library-from-scratch-01.md)
+- [x] [02.使用 Vite 搭建开发环境](/articles/engineering-design/build-vue-component-library-from-scratch-02-part-1.md)
 - [ ] 03.集成 Lint 代码检查
 - [ ] 04.Monorepo 下的模块打包
 - [ ] 05.组件库的样式方案设计

@@ -4,7 +4,9 @@
 
 ## 导航
 
-上一章节：[00.系列大纲](/articles/engineering-design/build-vue-component-library-from-scratch-00.md)
+系列导航：[00.系列大纲](/articles/engineering-design/build-vue-component-library-from-scratch-00.md)
+
+下一篇：[02.在 Monorepo 模式下集成 Vite 和 TypeScript - Part 1](/articles/engineering-design/build-vue-component-library-from-scratch-02-part-1.md)
 
 ## 为什么要采用 Monorepo 项目结构
 
