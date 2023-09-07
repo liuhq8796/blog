@@ -6,7 +6,7 @@
     "prefix": "sfc",
     "body": [
       "<script setup lang=\"${1:ts}\">",
-      "  $5",
+      "$5",
       "</script>",
       "",
       "<template>",
@@ -26,8 +26,16 @@
   },
   "Vue Define Emits": {
     "prefix": "emits",
-    "body": ["const emit = defineEmit<{", "  $1: [$2: $3]", "}>()"],
+    "body": ["const emit = defineEmits<{", "  $1: [$2: $3]", "}>()"],
     "description": "初始化 vue3 emits 定义"
   }
 }
 ```
+
+分享博文：
+
+[VSCode 利用 Snippets 设置超实用的代码块](https://juejin.cn/post/6844903869424599053)
+
+在线工具：
+
+[代码块生成工具 snippet generator](https://snippet-generator.app/)
