@@ -1,10 +1,14 @@
 # 从零搭建Vue组件库——02.在 Monorepo 模式下集成 Vite 和 TypeScript - Part 1
 
+> 本文参考了稀土掘金上蘑菇王的系列文章——[《从 0 到 1 搭建 Vue 组件库框架》](https://juejin.cn/post/7254341178258505788)，并通过 Github Copilot 的辅助编写功能进行了修改和补充。
+
 ## 导航
 
 系列导航：[00.系列大纲](/articles/engineering-design/build-vue-component-library-from-scratch-00.md)
 
 上一篇：[01.搭建 Monorepo 项目结构](/articles/engineering-design/build-vue-component-library-from-scratch-01.md)
+
+下一篇：[02.在 Monorepo 模式下集成 Vite 和 TypeScript - Part 2](/articles/engineering-design/build-vue-component-library-from-scratch-02-part-2.md)
 
 ## 前言
 
