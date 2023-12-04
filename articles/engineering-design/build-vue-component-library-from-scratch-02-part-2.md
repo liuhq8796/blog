@@ -332,7 +332,7 @@ import { hello } from '<rootPath>/<baseUrl>/packages/shared'
 
 其实，tsc / IDE 和 Vite 对于同样的 @wonderful-element/shared 的理解确实是不一样的：
 
-- tsc 根据 path 中设置的别名，将这个 id 解析成 <rootPath>/<baseUrl>/packages/shared/src，这个对应的是我们的源码文件。
+- tsc 根据 path 中设置的别名，将这个 id 解析成 `<rootPath>/<baseUrl>/packages/shared/src`，这个对应的是我们的源码文件。
 - 但是 Vite 在没有设置别名的情况下，将 @wonderful-element/shared 看做一个 npm 模块，结合其 package.json 的入口字段，最终这个 id 实际被解析为 node_modules/@wonderful-element/shared/dist/wonderful-element-shared.mjs。
 
 简单来说，tsc 定位到了源码文件，因此没有报错。而 Vite 定位到了构建产物，也没有出错。不过 tsc 只负责类型检查，而实打实的执行者是 Vite，Vite 目前读取的是产物而不是源码，这样的机制会导致我们对子模块源码的修改无法立即同步，必须先执行子模块的打包命令，假若子模块的产物目录 dist 被删除，demo 应用甚至会报错崩溃。
