@@ -15,3 +15,5 @@
 <!-- @include: ./nginx/index.md{3,} -->
 
 <!-- @include: ./engineering-design/index.md{3,} -->
+
+<!-- @include: ./design-philosophy/index.md{3,} -->

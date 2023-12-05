@@ -4,7 +4,6 @@
 
 - [Axios 源码中的基础工具函数](/articles/js/basic-utility-functions-in-axios-source-code)
 - [将一个值转换为一个数组](/articles/js/convert-a-value-to-an-array.md)
-- [设计思想：面向对象 —— 00.什么是面向对象](/articles/js/design-philosophy-object-oriented-00.md)
 - [如何优雅的捕获 await 的错误](/articles/js/how-to-elegantly-catch-errors-from-await)
 - [如何忽略输入法中的键盘事件](/articles/js/how-to-ignore-keyboard-events-in-ime)
 - [剔除对象中的属性](/articles/js/remove-properties-from-an-object)

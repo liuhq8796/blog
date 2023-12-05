@@ -34,6 +34,10 @@ const categories = [
     label: '工程化设计',
     link: '/articles/engineering-design/',
   },
+  {
+    label: '设计思想',
+    link: '/articles/design-philosophy/',
+  }
 ]
 
 export default categories.map<DefaultTheme.SidebarItem>((category) => {
