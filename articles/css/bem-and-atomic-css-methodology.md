@@ -300,7 +300,9 @@ CSS 框架满意度和使用率排名：https://2021.stateofcss.com/en-US/techno
     padding: 1.5rem;
     border-radius: 0.5rem;
     background-color: #fff;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
   .chat-notification-logo-wrapper {
     flex-shrink: 0;
