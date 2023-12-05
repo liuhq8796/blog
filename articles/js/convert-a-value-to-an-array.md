@@ -99,12 +99,12 @@ export default function arrify(value) {
 export default function arrify<ValueType>(value: ValueType): ValueType extends null | undefined
   ? [] // eslint-disable-line  @typescript-eslint/ban-types
   : ValueType extends string
-  ? [string]
-  : ValueType extends readonly unknown[]
-  ? ValueType
-  : ValueType extends Iterable<infer T>
-  ? T[]
-  : [ValueType]
+    ? [string]
+    : ValueType extends readonly unknown[]
+      ? ValueType
+      : ValueType extends Iterable<infer T>
+        ? T[]
+        : [ValueType]
 ```
 
 可以看出，类型定义方式和上面 `arrify` 函数的实现方式是一致的：

@@ -60,8 +60,8 @@ export const NOOP = () => {}
 const get = isFunction(opt)
   ? opt.bind(publicThis, publicThis)
   : isFunction(opt.get)
-  ? opt.get.bind(publicThis, publicThis)
-  : NOOP
+    ? opt.get.bind(publicThis, publicThis)
+    : NOOP
 if (get === NOOP) {
   warn$1(`Computed property "${key}" has no getter.`)
 }
@@ -548,12 +548,12 @@ export const getGlobalThis = (): any => {
       typeof globalThis !== 'undefined'
         ? globalThis
         : typeof self !== 'undefined'
-        ? self
-        : typeof window !== 'undefined'
-        ? window
-        : typeof global !== 'undefined'
-        ? global
-        : {})
+          ? self
+          : typeof window !== 'undefined'
+            ? window
+            : typeof global !== 'undefined'
+              ? global
+              : {})
   )
 }
 ```
