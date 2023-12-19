@@ -9,3 +9,4 @@
 - [面向对象——04.基于接口而非实现编程](/articles/design-philosophy/object-oriented-04.md)
 - [面向对象——05.多用组合少用继承](/articles/design-philosophy/object-oriented-05.md)
 - [面向对象——06.贫血模型与充血模型](/articles/design-philosophy/object-oriented-06.md)
+- [面向对象——07.类与类之间的交互关系](/articles/design-philosophy/object-oriented-07.md)
