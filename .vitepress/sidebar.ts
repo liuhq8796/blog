@@ -35,8 +35,8 @@ const categories = [
     link: '/articles/engineering-design/',
   },
   {
-    label: '设计思想',
-    link: '/articles/design-philosophy/',
+    label: '程序设计哲学',
+    link: '/articles/programming-philosophy/',
   },
 ]
 
