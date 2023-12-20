@@ -39,7 +39,7 @@ features:
   - title: 工程化设计
     icon: 🛠️
     link: /articles/engineering-design/
-  - title: 设计思想
+  - title: 程序设计哲学
     icon: 🧠
-    link: /articles/design-philosophy/
+    link: /articles/programming-philosophy/
 ---

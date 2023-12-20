@@ -16,4 +16,4 @@
 
 <!-- @include: ./engineering-design/index.md{3,} -->
 
-<!-- @include: ./design-philosophy/index.md{3,} -->
+<!-- @include: ./programming-philosophy/index.md{3,} -->
