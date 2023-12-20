@@ -10,3 +10,4 @@
 - [面向对象——05.多用组合少用继承](/articles/programming-philosophy/object-oriented-05.md)
 - [面向对象——06.贫血模型与充血模型](/articles/programming-philosophy/object-oriented-06.md)
 - [面向对象——07.类与类之间的交互关系](/articles/programming-philosophy/object-oriented-07.md)
+- [设计原则——00.单一职责原则](/articles/programming-philosophy/programming-principles-00.md)
