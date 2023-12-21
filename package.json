@@ -8,7 +8,7 @@
     "build": "vitepress build",
     "preview": "vitepress preview",
     "format": "prettier --write .",
-    "create:category": "ts-node ./scripts/create-category.ts"
+    "create:category": "node ./scripts/create-category.js"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -19,11 +19,9 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^20.10.5",
     "@types/prompts": "^2.4.9",
     "prettier": "^3.1.1",
     "prompts": "^2.4.2",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "vitepress": "1.0.0-rc.32"
   }
