@@ -13,3 +13,4 @@
 - [设计原则——00.单一职责原则](/articles/programming-philosophy/programming-principles-00.md)
 - [设计原则——01.开闭原则](/articles/programming-philosophy/programming-principles-01.md)
 - [设计原则——02.里氏替换原则](/articles/programming-philosophy/programming-principles-02.md)
+- [设计原则——03.接口隔离原则](/articles/programming-philosophy/programming-principles-03.md)
