@@ -8,7 +8,7 @@
 ////////// Controller+VO(View Object) //////////
 public class UserController {
   private UserService userService; //通过构造函数或者IOC框架注入
-  
+
   public UserVo getUserById(Long userId) {
     UserBo userBo = userService.getUserById(userId);
     UserVo userVo = [...convert userBo to userVo...];
@@ -25,7 +25,7 @@ public class UserVo {//省略其他属性、get/set/construct方法
 ////////// Service+BO(Business Object) //////////
 public class UserService {
   private UserRepository userRepository; //通过构造函数或者IOC框架注入
-  
+
   public UserBo getUserById(Long userId) {
     UserEntity userEntity = userRepository.getUserById(userId);
     UserBo userBo = [...convert userEntity to userBo...];
@@ -48,7 +48,7 @@ public class UserEntity {//省略其他属性、get/set/construct方法
   private Long id;
   private String name;
   private String cellphone;
-}    
+}
 ```
 
 我们平时开发 Web 后端项目的时候，基本上都是这么组织代码的。其中，UserEntity 和 UserRepository 组成了数据访问层，UserBo 和 UserService 组成了业务逻辑层，UserVo 和 UserController 在这里属于接口层。
