@@ -4,6 +4,8 @@
 
 <!-- @include: ./ts/index.md{3,} -->
 
+<!-- @include: ./html/index.md{3,} -->
+
 <!-- @include: ./css/index.md{3,} -->
 
 <!-- @include: ./vue/index.md{3,} -->
