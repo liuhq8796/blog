@@ -23,7 +23,7 @@ public class UserInfo {
   private String avatarUrl;
   private String provinceOfAddress; // 省
   private String cityOfAddress; // 市
-  private String regionOfAddress; // 区 
+  private String regionOfAddress; // 区
   private String detailedAddress; // 详细地址
   // ...省略其他属性和方法...
 }
@@ -39,11 +39,11 @@ public class UserInfo {
 
 实际上，一些侧面的判断指标更具有指导意义和可执行性，比如，出现下面这些情况就有可能说明这类的设计不满足单一职责原则：
 
-* 类中的代码行数、函数或者属性过多；
-* 类依赖的其他类过多，或者依赖类的其他类过多；
-* 私有方法过多；
-* 比较难给类起一个合适的名字；
-* 类中大量的方法都是集中操作类中的某几个属性。
+- 类中的代码行数、函数或者属性过多；
+- 类依赖的其他类过多，或者依赖类的其他类过多；
+- 私有方法过多；
+- 比较难给类起一个合适的名字；
+- 类中大量的方法都是集中操作类中的某几个属性。
 
 ## 类的职责是否设计得越单一越好？
 
@@ -57,18 +57,18 @@ public class UserInfo {
 public class Serialization {
   private static final String IDENTIFIER_STRING = "UEUEUE;";
   private Gson gson;
-  
+
   public Serialization() {
     this.gson = new Gson();
   }
-  
+
   public String serialize(Map<String, String> object) {
     StringBuilder textBuilder = new StringBuilder();
     textBuilder.append(IDENTIFIER_STRING);
     textBuilder.append(gson.toJson(object));
     return textBuilder.toString();
   }
-  
+
   public Map<String, String> deserialize(String text) {
     if (!text.startsWith(IDENTIFIER_STRING)) {
         return Collections.emptyMap();
@@ -85,11 +85,11 @@ public class Serialization {
 public class Serializer {
   private static final String IDENTIFIER_STRING = "UEUEUE;";
   private Gson gson;
-  
+
   public Serializer() {
     this.gson = new Gson();
   }
-  
+
   public String serialize(Map<String, String> object) {
     StringBuilder textBuilder = new StringBuilder();
     textBuilder.append(IDENTIFIER_STRING);
@@ -101,11 +101,11 @@ public class Serializer {
 public class Deserializer {
   private static final String IDENTIFIER_STRING = "UEUEUE;";
   private Gson gson;
-  
+
   public Deserializer() {
     this.gson = new Gson();
   }
-  
+
   public Map<String, String> deserialize(String text) {
     if (!text.startsWith(IDENTIFIER_STRING)) {
         return Collections.emptyMap();

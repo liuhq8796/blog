@@ -4,11 +4,11 @@
 
 里式替换原则的英文翻译是：Liskov Substitution Principle，缩写为 LSP。这个原则最早是在 1986 年由 Barbara Liskov 提出，他是这么描述这条原则的：
 
->If S is a subtype of T, then objects of type T may be replaced with objects of type S, without breaking the program。
+> If S is a subtype of T, then objects of type T may be replaced with objects of type S, without breaking the program。
 
 在 1996 年，Robert Martin 在他的 SOLID 原则中，重新描述了这个原则，英文原话是这样的：
 
->Functions that use pointers of references to base classes must be able to use objects of derived classes without knowing it。
+> Functions that use pointers of references to base classes must be able to use objects of derived classes without knowing it。
 
 我们综合两者的描述，将这条原则用中文描述出来，是这样的：子类对象（object of subtype/derived class）能够替换程序（program）中父类对象（object of base/parent class）出现的任何地方，并且保证原来程序的逻辑行为（behavior）不变及正确性不被破坏。
 
@@ -17,7 +17,7 @@
 ```java
 public class Transporter {
   private HttpClient httpClient;
-  
+
   public Transporter(HttpClient httpClient) {
     this.httpClient = httpClient;
   }
@@ -47,8 +47,8 @@ public class SecurityTransporter extends Transporter {
   }
 }
 
-public class Demo {    
-  public void demoFunction(Transporter transporter) {    
+public class Demo {
+  public void demoFunction(Transporter transporter) {
     Reuqest request = new Request();
     //...省略设置request中数据值的代码...
     Response response = transporter.sendRequest(request);
