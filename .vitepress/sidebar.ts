@@ -11,6 +11,10 @@ const categories = [
     link: '/articles/ts/',
   },
   {
+    label: 'HTML',
+    link: '/articles/html/',
+  },
+  {
     label: 'CSS',
     link: '/articles/css/',
   },
