@@ -14,3 +14,4 @@
 - [设计原则——01.开闭原则](/articles/programming-philosophy/programming-principles-01.md)
 - [设计原则——02.里氏替换原则](/articles/programming-philosophy/programming-principles-02.md)
 - [设计原则——03.接口隔离原则](/articles/programming-philosophy/programming-principles-03.md)
+- [设计原则——04.控制反转、依赖注入、依赖反转](/articles/programming-philosophy/programming-principles-04.md)
