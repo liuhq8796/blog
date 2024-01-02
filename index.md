@@ -42,9 +42,9 @@ features:
   - title: 工程化设计
     icon: 🛠️
     link: /articles/engineering-design/
-  - title: 程序设计哲学
-    icon: 🧠
-    link: /articles/programming-philosophy/
+  - title: 程序设计
+    icon: <img style="width:32px;height:32px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACEklEQVR4nGNgGAWjYBSMgkEJzl+/fer8jTv/BwM+d/3OCdI9MAgcfh4Jk+2BdXsO/5+8bP3/dXuPYOUPeg9MXrbh/4Ql6/5PWb4BK3/Qe2Dd3iNgR6+HxQAaf9B74PwgwQwj1gNqRhYDis+PesBoNAb+jyahG6OZ2ILsZGAYYPC/7D/z/+yH3EOzFPLsUgR7IHi51ND0QMJRIbAHbHI0B68HzGL0/ieeEMQQ17Q0+1/0nfV/8Q/W/1pWZnBxkFqTMP2B94BRoMH/mN2i/8v+MYNDGV3eNlcTLB5/RAhFHCRW+pf5f+QWsf+6Lsb094Ceh9H/sLUS/0v/sIAdA8IpF/gx1IUslwLLeXQpooinXOKD6yv8xP7fq0/hv4a5Of08AEoWMAdk3uf5b1+kjlVd1iNusBojfwNUOWOL/07Vqv9zX3DCzQGppZsHkC3Vw5EEQI7G5zAQ1nEyARevMPPo5oHw9RLwdF/wgf2/W4vyf3UTVDWgZAOSByUjDDOwxEDqFT76ZmKLRJ3/Gbd5cDoAlHFB4qCMjK4XOQ/kv+H471KvAvYU3UshdVPz/x7div+LvrKhJAFcxSdKKfSbBVy5adma0r8UQscGXob/4w4IEyw+kWMHVASrDXQ9gAvjKj7JwecHwgM4i8+h4gE1KuLzox4wGo2B/6NJ6MZoJrYYuqXQ+UGCGUacB0bBKBgFo4CBHgAAnQhuo3UE/7MAAAAASUVORK5CYII=">
+    link: /articles/programming/
   - title: 阅读
     icon: 📚
     link: /articles/reading/
