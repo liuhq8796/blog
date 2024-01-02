@@ -42,6 +42,10 @@ const categories = [
     label: '程序设计哲学',
     link: '/articles/programming-philosophy/',
   },
+  {
+    label: '阅读',
+    link: '/articles/reading/',
+  }
 ]
 
 export default categories.map<DefaultTheme.SidebarItem>((category) => {
