@@ -45,4 +45,7 @@ features:
   - title: 程序设计哲学
     icon: 🧠
     link: /articles/programming-philosophy/
+  - title: 阅读
+    icon: 📚
+    link: /articles/reading/
 ---
