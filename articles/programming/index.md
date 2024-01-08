@@ -17,3 +17,4 @@
 - [设计原则——04.控制反转、依赖注入、依赖反转](/articles/programming/programming-principles-04.md)
 - [设计原则——05.KISS 原则与 YAGNI 原则](/articles/programming/programming-principles-05.md)
 - [设计原则——06.DRY 原则](/articles/programming/programming-principles-06.md)
+- [设计原则——07.迪米特法则](/articles/programming/programming-principles-07.md)
