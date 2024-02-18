@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "@types/prompts": "^2.4.9",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "prompts": "^2.4.2",
     "typescript": "^5.3.3",
-    "vitepress": "1.0.0-rc.41"
+    "vitepress": "1.0.0-rc.43"
   }
 }
