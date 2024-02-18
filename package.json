@@ -23,6 +23,7 @@
     "prettier": "^3.2.5",
     "prompts": "^2.4.2",
     "typescript": "^5.3.3",
-    "vitepress": "1.0.0-rc.43"
+    "vitepress": "1.0.0-rc.43",
+    "vue": "^3.4.19"
   }
 }
