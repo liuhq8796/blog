@@ -3,6 +3,9 @@
 layout: home
 
 hero:
+  image:
+    src: /logo.png
+    alt: Lucas Liu
   name: 学海拾贝
   text: Lucas Liu's 博客
   tagline: 记录我的学习笔记
