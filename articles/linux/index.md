@@ -2,4 +2,4 @@
 
 ## Linux
 
-- [常用快捷键](/articles/linux/common-shortcut-keys)
+- [Linux 常用快捷键](/articles/linux/common-shortcut-keys)
