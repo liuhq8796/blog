@@ -23,3 +23,5 @@
 <!-- @include: ./reading/index.md{3,} -->
 
 <!-- @include: ./git/index.md{3,} -->
+
+<!-- @include: ./linux/index.md{3,} -->
