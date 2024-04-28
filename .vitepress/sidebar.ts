@@ -46,6 +46,10 @@ const categories = [
     label: '阅读',
     link: '/articles/reading/',
   },
+  {
+    label: 'Linux',
+    link: '/articles/linux/',
+  },
 ]
 
 export default categories.map<DefaultTheme.SidebarItem>((category) => {
