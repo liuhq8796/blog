@@ -4,6 +4,7 @@ import DefaultTheme from 'vitepress/theme'
 
 import './rainbow.css'
 import './vars.css'
+import './cover-default.css'
 
 let homePageStyle: HTMLStyleElement | undefined
 
