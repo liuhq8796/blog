@@ -1,3 +1,5 @@
+<p class="text-9xl leading-none">📚</p>
+
 # 文章目录
 
 ## 阅读

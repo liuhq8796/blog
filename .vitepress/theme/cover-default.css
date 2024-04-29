@@ -5,3 +5,10 @@
 .VPFeature.link:visited:hover {
     border-color: var(--vp-c-brand-2);
 }
+
+.vp-doc p.text-9xl {
+    font-size: 128px;
+}
+.vp-doc p.leading-none {
+    line-height: 1;
+}
