@@ -9,3 +9,4 @@
 - [Linux 文件属性](/articles/linux/linux-file-properties)
 - [Linux 更改文件的权限](/articles/linux/change-file-permissions)
 - [Linux 的目录结构](/articles/linux/the-directory-structure-of-Linux)
+- [极客时间《跟阿铭学 Linux》—— 《第 4 章 Linux文件和目录管理》课后习题](/articles/linux/linux-file-and-directory-management-exercises)
