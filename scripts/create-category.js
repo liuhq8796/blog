@@ -21,7 +21,7 @@ import prompts from 'prompts'
 
   writeFileSync(`./articles/${category}/index.md`, `# 文章目录\n\n## ${categoryRow}\n`)
 
-  const newIndex = `\n<!-- @include: ./${category}/index.md{3,} -->\n`
+  const newIndex = `\n<!-- @include: ./${category}/index.md{4,} -->\n`
 
   appendFileSync('./articles/index.md', newIndex)
 })()
