@@ -27,3 +27,5 @@
 <!-- @include: ./git/index.md{4,} -->
 
 <!-- @include: ./linux/index.md{4,} -->
+
+<!-- @include: ./lessons/index.md{4,} -->
