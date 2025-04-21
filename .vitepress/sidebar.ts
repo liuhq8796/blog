@@ -50,6 +50,10 @@ const categories = [
     label: 'Linux',
     link: '/articles/linux/',
   },
+  {
+    label: '课程',
+    link: '/articles/lessons/',
+  }
 ]
 
 export default categories.map<DefaultTheme.SidebarItem>((category) => {
