@@ -6,3 +6,4 @@
 
 - [Git 设置、查看、取消代理](/articles/git/git-set-view-cancel-proxy.md)
 - [Git 清空分支内容](/articles/git/git-clear-branch-content.md)
+- [替换历史提交中的用户名和邮箱](/articles/git/replace-username-and-email-in-historical-submissions.md)
